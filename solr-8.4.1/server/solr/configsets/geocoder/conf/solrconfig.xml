@@ -348,7 +348,7 @@
     <processor class="solr.RunUpdateProcessorFactory"/>
   </updateRequestProcessorChain>
 
-  <updateRequestProcessorChain name="create-lat-lon-field" default="true">
+  <updateRequestProcessorChain name="geocoder-update-chain" default="true">
     <processor class="solr.CloneFieldUpdateProcessorFactory"> 
       <str name="source">Latitude</str> 
       <str name="dest">LatLon</str> 
@@ -361,15 +361,20 @@
       <str name="fieldName">LatLon</str> 
       <str name="delimiter">,</str> 
     </processor>
-    <processor class="solr.LogUpdateProcessorFactory" /> 
-    <processor class="solr.RunUpdateProcessorFactory" />
-  </updateRequestProcessorChain>
-
-  <updateRequestProcessorChain name="replace-null" default="true">
-    <processor class="solr.FieldNameMutatingUpdateProcessorFactory">
-      <str name="pattern ">NULL</str>
+    <processor class="solr.RegexReplaceProcessorFactory">
+      <str name="fieldName">NumSuf</str>
+      <str name="fieldName">PreDir</str>
+      <str name="fieldName">PreType</str>
+      <str name="fieldName">PostType</str>
+      <str name="fieldName">PostDir</str>
+      <str name="fieldName">UnitType</str>
+      <str name="fieldName">UnitNumber</str>
+      <str name="pattern">(?i)NULL</str>
       <str name="replacement"></str>
     </processor>
+    <processor class="RemoveBlankFieldUpdateProcessorFactory"/>
+    <processor class="solr.LogUpdateProcessorFactory" /> 
+    <processor class="solr.RunUpdateProcessorFactory" />
   </updateRequestProcessorChain>
 
   <!-- 

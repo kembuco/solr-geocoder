@@ -37,24 +37,51 @@
       <filter class="solr.LowerCaseFilterFactory"/>
     </analyzer>
   </fieldType>
+
+  <fieldType name="squished" class="solr.TextField" sortMissingLast="true">
+    <analyzer>
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.TrimFilterFactory"/>
+      <filter class="solr.PatternReplaceFilterFactory" pattern="\s" replacement="" replace="all" />
+    </analyzer>
+  </fieldType>
+
+  <fieldType name="street_type" class="solr.TextField">
+    <analyzer type="index">
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+      <filter class="solr.FlattenGraphFilterFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.TrimFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+      <filter class="solr.SynonymGraphFilterFactory" synonyms="street-type-synonyms.txt" ignoreCase="true" expand="false"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.TrimFilterFactory"/>
+    </analyzer>
+  </fieldType>
   
   <field name="id" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
-  <field name="AddrFull" type="text_general"/>
+  <field name="AddrFull" type="squished"/>
   <field name="AddrNum" type="string"/>
-  <field name="County" type="text_general"/> <!-- Consider using phonetic -->
+  <field name="County" type="string"/>
   <field name="Latitude" type="pdouble"/>
   <field name="Longitude" type="pdouble"/>
   <field name="LatLon" type="location"/>
   <field name="NumSuf" type="text_general"/>
-  <field name="PlaceName" type="text_general"/><!-- Consider using phonetic -->
+  <field name="PlaceName" type="text_general"/>
   <field name="PostDir" type="text_general"/>
-  <field name="PostType" type="text_general"/>
+  <field name="PostType" type="street_type"/>
   <field name="PreDir" type="text_general"/>
-  <field name="PreType" type="text_general"/>
-  <field name="StreetName" type="text_general"/> <!-- Consider using phonetic -->
+  <field name="PreType" type="street_type"/>
+  <field name="StreetName" type="text_general"/> 
+  <field name="StreetNameS" type="squished"/>
   <field name="UnitNumber" type="text_general"/>
   <field name="UnitType" type="text_general"/>
   <field name="Zipcode" type="text_general"/>
   <field name="_root_" type="string" docValues="false" indexed="true" stored="false"/>
   <field name="_version_" type="plong" indexed="false" stored="false"/>
+
+  <copyField source="StreetName" dest="StreetNameS" />
 </schema>

@@ -2,3 +2,4 @@
 **/server/solr/geocoder
 **/server/logs/*
 **/bin/*.pid
+node_modules
