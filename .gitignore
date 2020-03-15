@@ -3,3 +3,4 @@
 **/server/logs/*
 **/bin/*.pid
 node_modules
+.venv

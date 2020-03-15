@@ -20,10 +20,11 @@
   <fieldType name="point" class="solr.PointType" subFieldSuffix="_d" dimension="2"/>
   <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true"/>
   <fieldType name="strings" class="solr.StrField" sortMissingLast="true" docValues="true" multiValued="true"/>
+    
+  <!-- TODO: this needs to be made more specific for our use cases -->
   <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100" multiValued="true">
     <analyzer type="index">
       <tokenizer class="solr.StandardTokenizerFactory"/>
-      <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" />
       <!-- in this example, we will only use synonyms at query time
       <filter class="solr.SynonymGraphFilterFactory" synonyms="index_synonyms.txt" ignoreCase="true" expand="false"/>
       <filter class="solr.FlattenGraphFilterFactory"/>
@@ -32,7 +33,6 @@
     </analyzer>
     <analyzer type="query">
       <tokenizer class="solr.StandardTokenizerFactory"/>
-      <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" />
       <filter class="solr.SynonymGraphFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
       <filter class="solr.LowerCaseFilterFactory"/>
     </analyzer>
@@ -43,20 +43,50 @@
       <tokenizer class="solr.KeywordTokenizerFactory"/>
       <filter class="solr.LowerCaseFilterFactory"/>
       <filter class="solr.TrimFilterFactory"/>
-      <filter class="solr.PatternReplaceFilterFactory" pattern="\s" replacement="" replace="all" />
+      <filter class="solr.PatternReplaceFilterFactory" pattern="(\s|-)" replacement="" replace="all" />
     </analyzer>
   </fieldType>
 
+  <!-- TODO: Test synonyms in index / Compare index size vs. speed -->
   <fieldType name="street_type" class="solr.TextField">
     <analyzer type="index">
       <tokenizer class="solr.KeywordTokenizerFactory"/>
-      <filter class="solr.FlattenGraphFilterFactory"/>
       <filter class="solr.LowerCaseFilterFactory"/>
       <filter class="solr.TrimFilterFactory"/>
     </analyzer>
     <analyzer type="query">
       <tokenizer class="solr.KeywordTokenizerFactory"/>
       <filter class="solr.SynonymGraphFilterFactory" synonyms="street-type-synonyms.txt" ignoreCase="true" expand="false"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.TrimFilterFactory"/>
+    </analyzer>
+  </fieldType>
+
+  <!-- TODO: Test synonyms in index / Compare index size vs. speed -->
+  <fieldType name="direction" class="solr.TextField">
+    <analyzer type="index">
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.TrimFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+      <filter class="solr.SynonymGraphFilterFactory" synonyms="direction-synonyms.txt" ignoreCase="true" expand="false"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.TrimFilterFactory"/>
+    </analyzer>
+  </fieldType>
+
+  <!-- TODO: Test synonyms in index / Compare index size vs. speed -->
+  <fieldType name="unit_type" class="solr.TextField">
+    <analyzer type="index">
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.TrimFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+      <filter class="solr.SynonymGraphFilterFactory" synonyms="unit-type-synonyms.txt" ignoreCase="true" expand="false"/>
       <filter class="solr.LowerCaseFilterFactory"/>
       <filter class="solr.TrimFilterFactory"/>
     </analyzer>
@@ -71,17 +101,21 @@
   <field name="LatLon" type="location"/>
   <field name="NumSuf" type="text_general"/>
   <field name="PlaceName" type="text_general"/>
-  <field name="PostDir" type="text_general"/>
+  <field name="PlaceNameS" type="squished"/>
+  <field name="PostDir" type="direction"/>
   <field name="PostType" type="street_type"/>
-  <field name="PreDir" type="text_general"/>
+  <field name="PreDir" type="direction"/>
   <field name="PreType" type="street_type"/>
   <field name="StreetName" type="text_general"/> 
   <field name="StreetNameS" type="squished"/>
-  <field name="UnitNumber" type="text_general"/>
-  <field name="UnitType" type="text_general"/>
+  <field name="UnitNumber" type="string"/>
+  <field name="UnitType" type="unit_type"/>
   <field name="Zipcode" type="text_general"/>
+  <field name="ZipcodeS" type="squished"/>
   <field name="_root_" type="string" docValues="false" indexed="true" stored="false"/>
   <field name="_version_" type="plong" indexed="false" stored="false"/>
 
   <copyField source="StreetName" dest="StreetNameS" />
+  <copyField source="PlaceName" dest="PlaceNameS" />
+  <copyField source="Zipcode" dest="ZipcodeS" />
 </schema>
