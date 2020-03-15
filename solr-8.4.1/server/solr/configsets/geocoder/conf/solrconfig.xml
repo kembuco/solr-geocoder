@@ -349,6 +349,23 @@
   </updateRequestProcessorChain>
 
   <updateRequestProcessorChain name="geocoder-update-chain" default="true">
+    <processor class="solr.TrimFieldUpdateProcessorFactory"/>
+
+    <!-- Remove CO from place names -->
+    <processor class="solr.RegexReplaceProcessorFactory">
+      <str name="fieldName">PlaceName</str>
+      <str name="pattern">(?i)\s+co</str>
+      <str name="replacement"></str>
+    </processor>
+
+    <!-- Rewrite <> as empty -->
+    <processor class="solr.RegexReplaceProcessorFactory">
+      <str name="fieldName">PlaceName</str>
+      <str name="pattern"><![CDATA[<>]]></str>
+      <str name="replacement"></str>
+    </processor>
+
+    <!-- Create a LatLon field for spacial search -->
     <processor class="solr.CloneFieldUpdateProcessorFactory"> 
       <str name="source">Latitude</str> 
       <str name="dest">LatLon</str> 
@@ -361,6 +378,34 @@
       <str name="fieldName">LatLon</str> 
       <str name="delimiter">,</str> 
     </processor>
+
+    <!-- Create a complete address -->
+    <processor class="solr.CloneFieldUpdateProcessorFactory"> 
+      <str name="source">AddrFull</str> 
+      <str name="dest">AddrComplete</str>
+    </processor>
+    <processor class="solr.CloneFieldUpdateProcessorFactory"> 
+      <str name="source">PlaceName</str> 
+      <str name="dest">AddrComplete</str>
+    </processor>
+    <processor class="solr.DefaultValueUpdateProcessorFactory"> 
+      <str name="fieldName">State</str>
+      <str name="value">CO</str>
+    </processor>
+    <processor class="solr.CloneFieldUpdateProcessorFactory"> 
+      <str name="source">State</str>
+      <str name="dest">AddrComplete</str>
+    </processor>
+    <processor class="solr.CloneFieldUpdateProcessorFactory"> 
+      <str name="source">Zipcode</str>
+      <str name="dest">AddrComplete</str>
+    </processor>
+    <processor class="solr.ConcatFieldUpdateProcessorFactory"> 
+      <str name="fieldName">AddrComplete</str> 
+      <str name="delimiter">, </str> 
+    </processor>
+
+    <!-- Remove fields with NULL values -->
     <processor class="solr.RegexReplaceProcessorFactory">
       <str name="fieldName">NumSuf</str>
       <str name="fieldName">PreDir</str>
@@ -373,6 +418,14 @@
       <str name="replacement"></str>
     </processor>
     <processor class="RemoveBlankFieldUpdateProcessorFactory"/>
+    
+    <!-- Replace NULL fields and trailing commas from AddrComplete -->
+    <processor class="solr.RegexReplaceProcessorFactory">
+      <str name="fieldName">PlaceName</str>
+      <str name="pattern">(?i),\sNULL|,\s$</str>
+      <str name="replacement"></str>
+    </processor>
+
     <processor class="solr.LogUpdateProcessorFactory" /> 
     <processor class="solr.RunUpdateProcessorFactory" />
   </updateRequestProcessorChain>

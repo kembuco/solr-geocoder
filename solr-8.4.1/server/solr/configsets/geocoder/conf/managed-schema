@@ -20,7 +20,7 @@
   <fieldType name="point" class="solr.PointType" subFieldSuffix="_d" dimension="2"/>
   <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true"/>
   <fieldType name="strings" class="solr.StrField" sortMissingLast="true" docValues="true" multiValued="true"/>
-    
+  
   <!-- TODO: this needs to be made more specific for our use cases -->
   <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100" multiValued="true">
     <analyzer type="index">
@@ -43,7 +43,7 @@
       <tokenizer class="solr.KeywordTokenizerFactory"/>
       <filter class="solr.LowerCaseFilterFactory"/>
       <filter class="solr.TrimFilterFactory"/>
-      <filter class="solr.PatternReplaceFilterFactory" pattern="(\s|-)" replacement="" replace="all" />
+      <filter class="solr.PatternReplaceFilterFactory" pattern="(\s|-|,)" replacement="" replace="all" />
     </analyzer>
   </fieldType>
 
@@ -93,9 +93,10 @@
   </fieldType>
   
   <field name="id" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
+  <field name="AddrComplete" type="squished"/>
   <field name="AddrFull" type="squished"/>
   <field name="AddrNum" type="string"/>
-  <field name="County" type="string"/>
+  <field name="County" type="string" indexed="false" stored="false"/>
   <field name="Latitude" type="pdouble"/>
   <field name="Longitude" type="pdouble"/>
   <field name="LatLon" type="location"/>
@@ -106,6 +107,7 @@
   <field name="PostType" type="street_type"/>
   <field name="PreDir" type="direction"/>
   <field name="PreType" type="street_type"/>
+  <field name="State" type="string" indexed="false" stored="false"/>
   <field name="StreetName" type="text_general"/> 
   <field name="StreetNameS" type="squished"/>
   <field name="UnitNumber" type="string"/>
