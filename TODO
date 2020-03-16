@@ -1,0 +1,8 @@
+Todo:
+  ☐ Move api into this project.
+  ☐ Create a query builder
+  ☐ Turn parsed address into solr query
+  ☐ Squeeze performance with Fastify
+  ☐ Fix import errors
+  ☐ Trim down the index
+  ☐ Do we gain speed from running this as Java?
