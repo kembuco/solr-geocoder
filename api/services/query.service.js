@@ -35,11 +35,53 @@ function addressStringToQuery( address ) {
 }
 
 function addressObjectToQuery({
-  AddressNumber,
-  StreetNamePreDirectional,
-  StreetName
+  AddressNumber, // address number
+  AddressNumberSuffix, // a modifier after an address number, e.g 'B', '1/2'
+  StreetName, // street name, excluding type & direction
+  StreetNamePreDirectional, // a direction before a street name, e.g. 'North', 'S'
+  StreetNamePreModifier, // a modifier before a street name that is not a direction, e.g. 'Old'
+  StreetNamePreType, // a street type that comes before a street name, e.g. 'Route', 'Ave' 
+  StreetNamePostDirectional, // a direction after a street name, e.g. 'North', 'S'
+  StreetNamePostModifier, // a modifier after a street name, e.g. 'Ext'
+  StreetNamePostType, // a street type that comes after a street name, e.g. 'Avenue', 'Rd'
+  OccupancyType, // a type of occupancy within a building, e.g. 'Suite', 'Apt', 'Floor'
+  OccupancyIdentifier, // the identifier of an occupancy, often a number or letter
+  PlaceName, // city
+  StateName, // state
+  ZipCode, // zipcode
 }) {
-  return `${eq('AddrNum', AddressNumber)} && ${eq('PreDir', StreetNamePreDirectional)} && ${beginsWith('StreetNameS', StreetName)}`;
+  const full = and(
+    eq('AddrNum', AddressNumber),
+    eq('NumSuf', AddressNumberSuffix),
+    eq('StreetNameS', StreetName),
+    eq('PreDir', StreetNamePreDirectional),
+    eq('PreType', StreetNamePreType),
+    eq('PostDir', StreetNamePostDirectional),
+    eq('PostType', StreetNamePostType),
+    eq('UnitType', OccupancyType),
+    eq('UnitNumber', OccupancyIdentifier),
+    eq('PlaceNameS', PlaceName),
+    eq('ZipcodeS', ZipCode)
+  );
+  const street = and(
+    eq('AddrNum', AddressNumber),
+    eq('NumSuf', AddressNumberSuffix),
+    eq('StreetNameS', StreetName),
+    eq('PreDir', StreetNamePreDirectional),
+    eq('PreType', StreetNamePreType),
+    eq('PostDir', StreetNamePostDirectional),
+    eq('PostType', StreetNamePostType)
+  );
+  const anything = and(
+    eq('AddrNum', AddressNumber),
+    eq('StreetNameS', StreetName)
+  );
+
+  return or(
+    group(full),
+    group(street),
+    group(anything)
+  );
 }
 
 /**

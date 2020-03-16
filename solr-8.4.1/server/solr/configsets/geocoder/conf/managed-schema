@@ -100,7 +100,7 @@
   <field name="Latitude" type="pdouble"/>
   <field name="Longitude" type="pdouble"/>
   <field name="LatLon" type="location"/>
-  <field name="NumSuf" type="text_general"/>
+  <field name="NumSuf" type="string"/>
   <field name="PlaceName" type="text_general"/>
   <field name="PlaceNameS" type="squished"/>
   <field name="PostDir" type="direction"/>
