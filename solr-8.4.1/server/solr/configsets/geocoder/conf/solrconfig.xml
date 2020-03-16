@@ -355,7 +355,7 @@
     <!-- Remove CO from place names -->
     <processor class="solr.RegexReplaceProcessorFactory">
       <str name="fieldName">PlaceName</str>
-      <str name="pattern">(?i)\s+co</str>
+      <str name="pattern">(?i)\s+co$</str>
       <str name="replacement"></str>
     </processor>
 

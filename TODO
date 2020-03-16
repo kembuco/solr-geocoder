@@ -2,12 +2,14 @@ Todo:
   ✔ Move api into this project. @done(20-03-16 07:18)
   ✔ Extract parsing into it's own service @started(20-03-16 07:20) @done(20-03-16 08:27) @lasted(1h7m20s)
   ✔ Create a query builder @started(20-03-16 08:35) @done(20-03-16 11:41) @lasted(3h6m18s)
-  ☐ Turn parsed address into solr query
-  ☐ Squeeze performance with Fastify
+  ✔ Turn parsed address into solr query @done(20-03-16 12:18)
+  ☐ Use geocoder for autocomplete to test addresses / performance
+  ☐ Create a batch endpoint
   ☐ Fix import errors
   ☐ Trim down the index
-  ☐ Do we gain speed from running this as Java?
 
 Performance:
   ☐ Re-training usaddress with our data
   ☐ Create a new parser with TensorFlow
+  ☐ Squeeze performance with Fastify (schemas)
+  ☐ Do we gain speed from running this as Java?

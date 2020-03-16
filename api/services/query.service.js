@@ -24,8 +24,8 @@ function toQuery( address ) {
 exports.toQuery = toQuery;
 
 function addressStringToQuery( address ) {
-  const simple = squash(address);
-  const expanded = squash(expand(address));
+  const simple = squish(address);
+  const expanded = squish(expand(address));
 
 
   return or(
@@ -53,7 +53,7 @@ function addressObjectToQuery({
   const full = and(
     eq('AddrNum', AddressNumber),
     eq('NumSuf', AddressNumberSuffix),
-    eq('StreetNameS', StreetName),
+    eq('StreetNameS', squish(StreetName)),
     eq('PreDir', StreetNamePreDirectional),
     eq('PreType', StreetNamePreType),
     eq('PostDir', StreetNamePostDirectional),
@@ -66,7 +66,7 @@ function addressObjectToQuery({
   const street = and(
     eq('AddrNum', AddressNumber),
     eq('NumSuf', AddressNumberSuffix),
-    eq('StreetNameS', StreetName),
+    eq('StreetNameS', squish(StreetName)),
     eq('PreDir', StreetNamePreDirectional),
     eq('PreType', StreetNamePreType),
     eq('PostDir', StreetNamePostDirectional),
@@ -74,7 +74,7 @@ function addressObjectToQuery({
   );
   const anything = and(
     eq('AddrNum', AddressNumber),
-    eq('StreetNameS', StreetName)
+    eq('StreetNameS', squish(StreetName))
   );
 
   return or(
@@ -89,8 +89,8 @@ function addressObjectToQuery({
  * 
  * @param {String} address A single-line address
  */
-function squash( address ) {
-  return address.replace(/\s/g, '');
+function squish( address = '' ) {
+  return address.replace(/\s|,/g, '');
 }
 
 /**
