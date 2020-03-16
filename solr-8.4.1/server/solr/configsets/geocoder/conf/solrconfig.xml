@@ -349,6 +349,7 @@
   </updateRequestProcessorChain>
 
   <updateRequestProcessorChain name="geocoder-update-chain" default="true">
+    <processor class="solr.TolerantUpdateProcessorFactory"/>
     <processor class="solr.TrimFieldUpdateProcessorFactory"/>
 
     <!-- Remove CO from place names -->
