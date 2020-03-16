@@ -1,3 +1,11 @@
+const {
+  and,
+  beginsWith,
+  eq,
+  group,
+  or
+} = require('../util/query.util');
+
 function toParams( address ) {
   return {
     q: toQuery(address),
@@ -19,7 +27,11 @@ function addressStringToQuery( address ) {
   const simple = squash(address);
   const expanded = squash(expand(address));
 
-  return `AddrComplete:${simple}* || AddrComplete:${expanded}*`;
+
+  return or(
+    beginsWith('AddrComplete', simple),
+    beginsWith('AddrComplete', expanded)
+  );
 }
 
 function addressObjectToQuery({
@@ -27,7 +39,7 @@ function addressObjectToQuery({
   StreetNamePreDirectional,
   StreetName
 }) {
-  return `AddrNum:${AddressNumber} && PreDir:${StreetNamePreDirectional} && StreetNameS:${StreetName}*`;
+  return `${eq('AddrNum', AddressNumber)} && ${eq('PreDir', StreetNamePreDirectional)} && ${beginsWith('StreetNameS', StreetName)}`;
 }
 
 /**
