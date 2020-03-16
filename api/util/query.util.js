@@ -30,7 +30,6 @@ exports.beginsWith = beginsWith;
 function logical( operator, ...operands) {
   const [ left, right ] = operands;
   let response = '';
-  console.log(`left: ${left}, right: ${right}`);
 
   if ( !left ) {
     response = right;
@@ -45,7 +44,6 @@ function logical( operator, ...operands) {
   if ( operands.length > 2 ) {
     return logical(...[operator, response, ...operands.slice(2)]);
   } else {
-    console.log(`response: ${response}`);
     return response;
   }
 }
@@ -80,6 +78,6 @@ exports.or = or;
  * @param {String} right Right side of the && query
  */
 function group( clause ) {
-  return `(${clause})`;
+  return clause ? `(${clause})` : '';
 }
 exports.group = group;
