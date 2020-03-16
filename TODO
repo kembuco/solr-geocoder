@@ -1,5 +1,6 @@
 Todo:
-  ☐ Move api into this project.
+  ✔ Move api into this project. @done(20-03-16 07:18)
+  ✔ Extract parsing into it's own service @started(20-03-16 07:20) @done(20-03-16 08:27) @lasted(1h7m20s)
   ☐ Create a query builder
   ☐ Turn parsed address into solr query
   ☐ Squeeze performance with Fastify
