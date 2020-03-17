@@ -1,3 +1,8 @@
+const { parseAddress } = require('../services/parsing.service');
+const axios = require('axios').create({
+  baseURL: process.env.SOLR_URL
+});
+
 const {
   and,
   beginsWith,
@@ -6,22 +11,36 @@ const {
   or
 } = require('../util/query.util');
 
-function toParams( address ) {
-  return {
-    q: toQuery(address),
-    fl: process.env.SOLR_QUERY_FL,
-    sort: process.env.SOLR_QUERY_SORT,
-    debugQuery: process.env.SOLR_QUERY_DEBUG
-  }  
-}
-exports.toParams = toParams;
+async function query( address, debug = false ) {
+  // First, try to geocode the address string
+  let geocode = await querySolr(addressStringToQuery(address), debug);
 
-function toQuery( address ) {
-  const fn = (typeof address === 'string') ? addressStringToQuery : addressObjectToQuery;
+  // Second, parse the address into it's parts for a more expansive search
+  if ( !geocode.data.response.numFound ) {
+    const parsed = await parseAddress(address);
+    console.log(parsed);
+    
+    geocode = await querySolr(addressObjectToQuery(parsed), debug);
 
-  return fn(address);
+    if ( !geocode.data.response.numFound ) {
+      geocode = await querySolr(returnAythingQuery(address), debug);
+    }
+  }
+  
+  return geocode.data;
 }
-exports.toQuery = toQuery;
+exports.query = query;
+
+async function querySolr( q, debug ) {
+  return await axios.get('/select', { 
+    params: {
+      q,
+      fl: process.env.SOLR_QUERY_FL,
+      sort: process.env.SOLR_QUERY_SORT,
+      debugQuery: debug || process.env.SOLR_QUERY_DEBUG
+    }
+  });
+}
 
 function addressStringToQuery( address ) {
   const simple = squish(address);
@@ -72,7 +91,7 @@ function addressObjectToQuery({
     eq('PostDir', StreetNamePostDirectional),
     eq('PostType', StreetNamePostType)
   );
-  const anything = and(
+  const simple = and(
     eq('AddrNum', AddressNumber),
     eq('StreetNameS', squish(StreetName))
   );
@@ -80,8 +99,19 @@ function addressObjectToQuery({
   return or(
     group(full),
     group(street),
-    group(anything)
+    group(simple)
   );
+}
+
+function returnAythingQuery( terms ) {
+  const squished = squish(terms);
+
+  return or(
+    beginsWith('AddrNum', squished),
+    beginsWith('StreetNameS', squished),
+    beginsWith('PlaceNameS', squished),
+    beginsWith('ZipcodeS', squished)
+  )
 }
 
 /**
