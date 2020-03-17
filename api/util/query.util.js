@@ -25,6 +25,28 @@ function beginsWith( field, value ) {
 exports.beginsWith = beginsWith;
 
 /**
+ * Creates a query string where field should be 'like' value.
+ * 
+ * @param {String} field Field to search on
+ * @param {String} value Value to search for
+ */
+function fuzzy( field, value ) {
+  return value ? `${eq(field, value)}~` : '';
+}
+exports.fuzzy = fuzzy;
+
+/**
+ * Boost query terms
+ * 
+ * @param {String} term Term to boost
+ * @param {Number} boost Number to boost term by
+ */
+function boost( term, boost ) {
+  return term ? `${term}^${boost}` : '';
+}
+exports.boost = boost;
+
+/**
  * An abstraction of a logical operation to keep things DRY.
  * 
  * @param {String} left Left side of the logical expression
