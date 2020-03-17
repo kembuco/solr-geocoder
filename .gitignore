@@ -4,3 +4,7 @@
 **/bin/*.pid
 node_modules
 .venv
+
+# Processed data files
+AllAddressesProcessed.csv
+addresses-*.csv

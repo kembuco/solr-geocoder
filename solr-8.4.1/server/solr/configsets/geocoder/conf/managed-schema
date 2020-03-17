@@ -108,7 +108,6 @@
   <field name="PostType" type="street_type"/>
   <field name="PreDir" type="direction"/>
   <field name="PreType" type="street_type"/>
-  <field name="State" type="string" indexed="false" stored="false"/>
   <field name="StreetName" type="text_general"/> 
   <field name="StreetNameS" type="squished"/>
   <field name="UnitNumber" type="string"/>
