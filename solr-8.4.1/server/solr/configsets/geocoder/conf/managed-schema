@@ -93,6 +93,7 @@
   </fieldType>
   
   <field name="id" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
+  <field name="signature" type="string" stored="true" indexed="true" multiValued="false" />
   <field name="AddrComplete" type="squished"/>
   <field name="AddrFull" type="squished"/>
   <field name="AddrNum" type="string"/>
