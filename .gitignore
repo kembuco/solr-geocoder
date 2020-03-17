@@ -6,5 +6,5 @@ node_modules
 .venv
 
 # Processed data files
+AllAddresses.csv
 AllAddressesProcessed.csv
-addresses-*.csv
