@@ -5,6 +5,10 @@
  * @param {String} value Value to search for
  */
 function eq( field, value ) {
+  if ( value && value.split(' ').length > 1 ) {
+    value = `"${value}"`;
+  }
+
   return value ? `${field}:${value}` : '';
 };
 exports.eq = eq;
