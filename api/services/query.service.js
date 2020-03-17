@@ -6,7 +6,9 @@ const axios = require('axios').create({
 const {
   and,
   beginsWith,
+  boost,
   eq,
+  fuzzy,
   group,
   or
 } = require('../util/query.util');
@@ -18,7 +20,6 @@ async function query( address, debug = false ) {
   // Second, parse the address into it's parts for a more expansive search
   if ( !geocode.data.response.numFound ) {
     const parsed = await parseAddress(address);
-    console.log(parsed);
     
     geocode = await querySolr(addressObjectToQuery(parsed), debug);
 
@@ -107,10 +108,31 @@ function returnAythingQuery( terms ) {
   const squished = squish(terms);
 
   return or(
-    beginsWith('AddrNum', squished),
-    beginsWith('StreetNameS', squished),
-    beginsWith('PlaceNameS', squished),
-    beginsWith('ZipcodeS', squished)
+    group(
+      or(
+        boost(eq('AddrNum', squished), 2),
+        fuzzy('AddrNum', squished)
+      )
+    ),
+    group(
+      or(
+        boost(eq('StreetNameS', squished), 2),
+        fuzzy('StreetNameS', squished)
+      )
+    ),
+    group(
+      or(
+        boost(eq('PlaceNameS', squished), 2),
+        fuzzy('PlaceNameS', squished)
+      )
+    ),
+    group(
+      or(
+        boost(eq('ZipcodeS', squished), 2),
+        fuzzy('ZipcodeS', squished)
+      )
+    ),
+    fuzzy('AddrComplete', terms)
   )
 }
 
