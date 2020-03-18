@@ -1,3 +1,0 @@
-st,saint
-ft,fort
-mt,mount
