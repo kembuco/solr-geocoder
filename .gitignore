@@ -1,9 +1,6 @@
-*.zip
-**/server/solr/geocoder
-**/server/logs/*
-**/bin/*.pid
 node_modules
 .venv
+solr*
 
 # Processed data files
 AllAddresses.csv
