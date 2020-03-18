@@ -1,6 +1,7 @@
 node_modules
 .venv
-solr*
+solr
+solr-*.zip
 
 # Processed data files
 AllAddresses.csv

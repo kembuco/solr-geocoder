@@ -6,8 +6,11 @@ const util = require('util');
 const ora = require('ora');
 const fs = require('fs-extra');
 
+const downloadUrl = 'https://downloads.apache.org/lucene/solr';
 const installPath = `${__dirname}/../`;
 const unzippedPath = path.resolve(installPath, 'solr');
+const executablePath = path.resolve(unzippedPath, 'bin/solr');
+const EXECUTABLE_PERMISSIONS = 0o755;
 
 // TODO: add flag for prduction use (i.e. create startup scripts, etc.)
 module.exports = async function install( version ) {
@@ -35,7 +38,7 @@ function stats( version ) {
 
 async function download( version ) {
   const { filename, filepath } = stats(version);
-  const url = `https://downloads.apache.org/lucene/solr/${version}/${filename}`;
+  const url = `${downloadUrl}/${version}/${filename}`;
   const text = `Downloading ${chalk.magenta(filename)}`;
   let response = Promise.resolve();
   let spinner;
@@ -58,7 +61,7 @@ async function download( version ) {
     });
     
     // Create a progress spinner that updates on progress events
-    spinner = ora.promise(response, { text, color: 'green'});
+    spinner = ora.promise(response, { text, color: 'green' });
     
     // Initialize the download
     const { data, headers } = await axios.get(url, {
@@ -105,20 +108,21 @@ async function move( version ) {
   const { name } = stats(version);
   const installedPath = path.resolve(unzippedPath, name);
   const movedPath = path.resolve(installPath, name);
-  const response = new Promise(( resolve, reject ) => {
-    try {
-      fs.moveSync(installedPath, movedPath);
-      fs.removeSync(unzippedPath);
-      fs.renameSync(movedPath, unzippedPath);
 
-      resolve();
-    } catch ( e ) {
-      reject(e);
-    }
-  });
+  const moved = await fs.move(installedPath, movedPath);
+  const removed = await fs.remove(unzippedPath);
+  const renamed = await fs.rename(movedPath, unzippedPath);
+  const chmoded = await fs.chmod(executablePath, EXECUTABLE_PERMISSIONS);
+
+  const response = Promise.all([
+    moved,
+    removed,
+    renamed,
+    chmoded
+  ]);
   
   ora.promise(response, {
-    text: `Installing ${chalk.magenta(version)}`,
+    text: `Installing Solr (${chalk.magenta(version)})`,
     color: 'green'
   });
 
