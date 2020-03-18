@@ -1,0 +1,38 @@
+#! /usr/bin/env node
+const { program } = require('commander');
+const install = require('./scripts/install');
+const solr = require('./scripts/solr');
+
+async function main() {
+  program
+    .version('1.0')
+    .name('solr-geocoder')
+    .usage('[options] command')
+    .arguments('<cmd>');
+  
+  program
+    .command('install <version>')
+    .action(async ( version ) => {
+    const installed = await install(version);
+    const started = await start();
+
+    return Promise.all([
+      installed,
+      started
+    ])
+  });
+
+  program
+    .command('start')
+    .option('-p, --port', 'Port to start Solr on')
+    .action(solr('restart', 'Starting Solr...'));
+
+  program
+    .command('stop')
+    .option('-p, --port', 'Port on which to stop Solr')
+    .action(solr('stop', 'Stopping Solr...'));
+
+  await program.parseAsync(process.argv);
+}
+
+main();
