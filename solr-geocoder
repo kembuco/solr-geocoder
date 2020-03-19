@@ -32,7 +32,7 @@ async function main() {
     });
     const dataProcessed = await processData({
       infile: process.env.DATA_INFILE,
-      outfile: process.env.DATA_OUTFILE
+      outfilesPattern: process.env.DATA_OUTFILES_PATTERN
     });
     const dataLoaded = await loadData({
       core: process.env.SOLR_CORE,
@@ -73,7 +73,7 @@ async function main() {
   program
     .command('process-data')
     .option('-i, --infile [infile]', 'File to process', process.env.DATA_INFILE)
-    .option('-o, --outfiles-pattern [outfiles]', 'Pattern for files to write to', process.env.DATA_OUTFILE_PATTERN)
+    .option('-o, --outfiles-pattern [outfiles]', 'Pattern for files to write to', process.env.DATA_OUTFILES_PATTERN)
     .action(processData);
   
   program
