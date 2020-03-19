@@ -46,7 +46,7 @@ exports.forwardQuery = forwardQuery;
 async function reverseQuery( latlon, debug = false ) {
   const { data } = await axios.get('/select', { 
     params: {
-      d: '.05',
+      d: process.env.SOLR_QUERY_REVERSE_RADIUS,
       q: '*:*',
       pt: latlon,
       fq: '{!bbox}',
