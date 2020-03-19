@@ -3,7 +3,9 @@ Todo:
   ✔ Extract parsing into it's own service @started(20-03-16 07:20) @done(20-03-16 08:27) @lasted(1h7m20s)
   ✔ Create a query builder @started(20-03-16 08:35) @done(20-03-16 11:41) @lasted(3h6m18s)
   ✔ Turn parsed address into solr query @done(20-03-16 12:18)
-  ☐ Use geocoder for autocomplete to test addresses / performance
+  ✔ Use geocoder for autocomplete to test addresses / performance @done(20-03-19 09:24)
+  ☐ Create a reverse geocode enpoint
+  ☐ Add ability to handle street intersections
   ☐ Create a batch endpoint
   ☐ Fix import errors
   ☐ Trim down the index

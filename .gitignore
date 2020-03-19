@@ -1,9 +1,9 @@
+# Tool files
 node_modules
 .venv
+yarn-error.log
+
+# Project files
 solr
 solr-*.zip
-
-# Processed data files
-AllAddresses.csv
-addresses-*.csv
-yarn-error.log
+data/**/*

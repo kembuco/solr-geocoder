@@ -13,7 +13,18 @@ const {
   or
 } = require('../util/query.util');
 
-async function query( address, debug = false ) {
+async function querySolr( q, debug ) {
+  return await axios.get('/select', { 
+    params: {
+      q,
+      fl: process.env.SOLR_QUERY_FL,
+      sort: process.env.SOLR_QUERY_SORT,
+      debugQuery: debug || process.env.SOLR_QUERY_DEBUG
+    }
+  });
+}
+
+async function forwardQuery( address, debug = false ) {
   // First, try to geocode the address string
   let geocode = await querySolr(addressStringToQuery(address), debug);
 
@@ -30,18 +41,25 @@ async function query( address, debug = false ) {
   
   return geocode.data;
 }
-exports.query = query;
+exports.forwardQuery = forwardQuery;
 
-async function querySolr( q, debug ) {
-  return await axios.get('/select', { 
+async function reverseQuery( latlon, debug = false ) {
+  const { data } = await axios.get('/select', { 
     params: {
-      q,
-      fl: process.env.SOLR_QUERY_FL,
-      sort: process.env.SOLR_QUERY_SORT,
+      d: '.05',
+      q: '*:*',
+      pt: latlon,
+      fq: '{!bbox}',
+      sfield: 'LatLon',
+      sort: 'geodist() asc',
+      fl: `${process.env.SOLR_QUERY_FL},dist:geodist()`,
       debugQuery: debug || process.env.SOLR_QUERY_DEBUG
     }
   });
+
+  return data;
 }
+exports.reverseQuery = reverseQuery;
 
 function addressStringToQuery( address ) {
   const simple = squish(address);

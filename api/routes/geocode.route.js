@@ -1,13 +1,19 @@
-const { query } = require('../services/query.service');
+const { 
+  forwardQuery,
+  reverseQuery
+} = require('../services/query.service');
 
 module.exports = async function (fastify, options) {
-  fastify.get('/geocode/:address', async ({ params }, reply) => {
-    const { response } = await query(params.address);
+  fastify.get('/geocode/forward/:address', async ({ params, query }, reply) => {
+    const { response } = await forwardQuery(params.address, query.debug || false);
 
     return response;
   });
-  
-  fastify.get('/geocode/debug/:address', async ({ params }, reply) => {
-    return await query(params.address, true);
+
+  fastify.get('/geocode/reverse/:latlon', async ({ params, query }, reply) => {
+    const { response } = await reverseQuery(params.latlon, query.debug || false);
+    console.log(response);
+
+    return response;
   });
 }
