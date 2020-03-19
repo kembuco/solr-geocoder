@@ -10,6 +10,7 @@ const downloadUrl = 'https://downloads.apache.org/lucene/solr';
 const installPath = `${__dirname}/../`;
 const unzippedPath = path.resolve(installPath, 'solr');
 const executablePath = path.resolve(unzippedPath, 'bin/solr');
+const postPath = path.resolve(unzippedPath, 'bin/post');
 const EXECUTABLE_PERMISSIONS = 0o755;
 
 // TODO: add flag for prduction use (i.e. create startup scripts, etc.)
@@ -112,7 +113,10 @@ async function move( version ) {
   const moved = await fs.move(installedPath, movedPath);
   const removed = await fs.remove(unzippedPath);
   const renamed = await fs.rename(movedPath, unzippedPath);
-  const chmoded = await fs.chmod(executablePath, EXECUTABLE_PERMISSIONS);
+  const chmoded = await Promise.all([
+    fs.chmod(executablePath, EXECUTABLE_PERMISSIONS),
+    fs.chmod(postPath, EXECUTABLE_PERMISSIONS)
+  ]);
 
   const response = Promise.all([
     moved,

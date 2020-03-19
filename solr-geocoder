@@ -2,8 +2,17 @@
 const { program } = require('commander');
 const install = require('./scripts/install');
 const solr = require('./scripts/solr');
+const post = require('./scripts/post');
+const processData = require('./scripts/process-data');
+const loadData = require('./scripts/post');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 async function main() {
+  const start = solr('restart', 'Starting Solr...');
+  const create = solr('create', 'Creating Solr core...');
+
   program
     .version('1.0')
     .name('solr-geocoder')
@@ -14,23 +23,65 @@ async function main() {
     .command('install <version>')
     .action(async ( version ) => {
     const installed = await install(version);
-    const started = await start();
+    const started = await start({
+      port: process.env.SOLR_PORT
+    });
+    const coreCreated = await create({
+      core: process.env.SOLR_CORE,
+      confdir: process.env.SOLR_CONFIG_SET
+    });
+    const dataProcessed = await processData({
+      infile: process.env.DATA_INFILE,
+      outfile: process.env.DATA_OUTFILE
+    });
+    const dataLoaded = await loadData({
+      core: process.env.SOLR_CORE,
+      params: process.env.POST_PARAMS,
+      files: process.env.POST_DATA_FILES
+    });
 
     return Promise.all([
       installed,
-      started
-    ])
+      started,
+      coreCreated,
+      dataProcessed,
+      dataLoaded
+    ]);
   });
 
   program
     .command('start')
-    .option('-p, --port', 'Port to start Solr on')
-    .action(solr('restart', 'Starting Solr...'));
+    .option('-p, --port [port]', 'Port to start Solr on', process.env.SOLR_PORT)
+    .action(start);
 
   program
     .command('stop')
-    .option('-p, --port', 'Port on which to stop Solr')
+    .option('-p, --port [port]', 'Port on which to stop Solr', process.env.SOLR_PORT)
     .action(solr('stop', 'Stopping Solr...'));
+
+  program
+    .command('create-core')
+    .option('-c, --core [core]', 'Name of the core to create', process.env.SOLR_CORE)
+    .option('-d, --confdir [confdir]', 'Path to configset directory', process.env.SOLR_CONFIG_SET)
+    .action(create);
+
+  program
+    .command('delete-core')
+    .option('-c, --core [core]', 'Name of the core to delete', process.env.SOLR_CORE)
+    .action(solr('delete', 'Deleting Solr core...'));
+
+  program
+    .command('process-data')
+    .option('-i, --infile [infile]', 'File to process', process.env.DATA_INFILE)
+    .option('-o, --outfiles-pattern [outfiles]', 'Pattern for files to write to', process.env.DATA_OUTFILE_PATTERN)
+    .action(processData);
+  
+  program
+    .command('load-data')
+    .option('-c, --core [core]', 'Name of the core in which to load data', process.env.SOLR_CORE)
+    .option('-p, --params [params]', 'Params to pass to the post program', process.env.POST_PARAMS)
+    .option('-f, --files [files]', 'Files to post', process.env.POST_DATA_FILES)
+    .action(post)
 
   await program.parseAsync(process.argv);
 }
