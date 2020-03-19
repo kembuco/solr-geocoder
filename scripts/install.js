@@ -126,7 +126,7 @@ async function move( version ) {
   ]);
   
   ora.promise(response, {
-    text: `Installing Solr (${chalk.magenta(version)})`,
+    text: `Installing Solr ${chalk.magenta(version)}`,
     color: 'green'
   });
 
