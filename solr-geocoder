@@ -83,6 +83,14 @@ async function main() {
     .option('-f, --files [files]', 'Files to post', process.env.POST_DATA_FILES)
     .action(post)
 
+  program
+    .command('reload-core')
+    .option('-c, --core [core]', 'Name of the core in which to load data', process.env.SOLR_CORE)
+    .option('-d, --confdir [confdir]', 'Path to configset directory', process.env.SOLR_CONFIG_SET)
+    .action(async ({ core, confdir }) => {
+      console.log(program);
+    });
+
   await program.parseAsync(process.argv);
 }
 
