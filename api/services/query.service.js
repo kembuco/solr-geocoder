@@ -43,6 +43,8 @@ async function queryRoads( q, debug ) {
 async function forwardQuery( address, debug = false ) {
   let geocode;
 
+  address = cleanAddress(address);
+
   // See if the address is an intersection query
   const intersection = getIntersection(address);
   if ( intersection ) {
@@ -231,6 +233,10 @@ async function processIntersection( left, right ) {
  */
 function squish( address = '' ) {
   return address.replace(/[\s,]/g, '');
+}
+
+function cleanAddress( address = '' ) {
+  return address.replace(/[\+\-\!\(\)\{\}\[\]\^\"\~\*\?\:\\\/]|\&{2,}|\|{2,}/g, '');
 }
 
 /**
