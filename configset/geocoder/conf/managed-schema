@@ -33,7 +33,24 @@
     </analyzer>
     <analyzer type="query">
       <tokenizer class="solr.StandardTokenizerFactory"/>
-      <filter class="solr.SynonymGraphFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  
+  <fieldType name="full_address" class="solr.TextField" positionIncrementGap="100" multiValued="true">
+    <analyzer type="index">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <!-- in this example, we will only use synonyms at query time
+      <filter class="solr.SynonymGraphFilterFactory" synonyms="index_synonyms.txt" ignoreCase="true" expand="false"/>
+      <filter class="solr.FlattenGraphFilterFactory"/>
+      -->
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.SynonymGraphFilterFactory" synonyms="street-type-synonyms.txt" ignoreCase="true" expand="false"/>
+      <filter class="solr.SynonymGraphFilterFactory" synonyms="direction-synonyms.txt" ignoreCase="true" expand="false"/>
+      <filter class="solr.SynonymGraphFilterFactory" synonyms="unit-type-synonyms.txt" ignoreCase="true" expand="false"/>
       <filter class="solr.LowerCaseFilterFactory"/>
     </analyzer>
   </fieldType>
@@ -93,9 +110,9 @@
   </fieldType>
   
   <field name="id" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
-  <field name="signature" type="string" stored="true" indexed="true" multiValued="false" />
   <field name="AddrComplete" type="squished"/>
-  <field name="AddrFull" type="squished"/>
+  <field name="AddrFull" type="full_address"/>
+  <field name="AddrFullS" type="squished"/>
   <field name="AddrNum" type="string"/>
   <field name="County" type="string" indexed="false" stored="false"/>
   <field name="Latitude" type="pdouble"/>
@@ -117,6 +134,7 @@
   <field name="_root_" type="string" docValues="false" indexed="true" stored="false"/>
   <field name="_version_" type="plong" indexed="false" stored="false"/>
 
+  <copyField source="AddrFull" dest="AddrFullS" />
   <copyField source="StreetName" dest="StreetNameS" />
   <copyField source="PlaceName" dest="PlaceNameS" />
   <copyField source="Zipcode" dest="ZipcodeS" />
