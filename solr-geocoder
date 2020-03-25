@@ -12,6 +12,7 @@ dotenv.config();
 async function main() {
   const start = solr('restart', 'Starting Solr...');
   const create = solr('create', 'Creating Solr core...');
+  const destroy = solr('delete', 'Deleting Solr core...');
 
   program
     .version('1.0')
@@ -68,7 +69,7 @@ async function main() {
   program
     .command('delete-core')
     .option('-c, --core [core]', 'Name of the core to delete', process.env.SOLR_CORE)
-    .action(solr('delete', 'Deleting Solr core...'));
+    .action(destroy);
 
   program
     .command('process-data')
@@ -88,7 +89,16 @@ async function main() {
     .option('-c, --core [core]', 'Name of the core in which to load data', process.env.SOLR_CORE)
     .option('-d, --confdir [confdir]', 'Path to configset directory', process.env.SOLR_CONFIG_SET)
     .action(async ({ core, confdir }) => {
-      console.log(program);
+      console.log(core, confdir);
+      const destroyed = await destroy({ core });
+      const created = await create({ core, confdir });
+      const loaded = await loadData({
+        core,
+        params: process.env.POST_PARAMS,
+        files: process.env.POST_DATA_FILES
+      });
+
+      return Promise.all([ destroyed, created, loaded ]);
     });
 
   await program.parseAsync(process.argv);

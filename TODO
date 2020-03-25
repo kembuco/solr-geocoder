@@ -4,9 +4,23 @@ Todo:
   ✔ Create a query builder @started(20-03-16 08:35) @done(20-03-16 11:41) @lasted(3h6m18s)
   ✔ Turn parsed address into solr query @done(20-03-16 12:18)
   ✔ Use geocoder for autocomplete to test addresses / performance @done(20-03-19 09:24)
-  ☐ Create a reverse geocode enpoint
+  ✔ Create a reverse geocode enpoint @done(20-03-19 10:23)
   ☐ Add ability to handle street intersections
+    ✔ Export road data from PostGIS @done(20-03-24 16:15)
+    ✔ Create a specialized configset for roads @done(20-03-24 16:22)
+    ✔ Import road data into solr @done(20-03-24 17:12)
+    ☐ Detect and parse intersection queries
+    ☐ Search Solr for streets on both sides of the intersection (because it is fast)
+    ☐ Search PostGIS for intersections from Solr results (because it is simple & fast)
+    ☐ Figure out st/saint for roads like "Saint vrain street"
+  ☐ compare openaddresses with what we have.
+  ☐ boundaries in solr
+  ☐ interpolation of addresses
   ☐ Create a batch endpoint
+  ☐ Rename everything from geocoder to addresses for addresses
+  ☐ Can we do what we're doing with only a AddrComplete field? ***
+  ☐ CLI: core should be an argument and not an option. (i.e. create-core addresses vs create-core -c addresses)
+  ☐ Find a way to have common configset files
   ☐ Fix import errors
   ☐ Trim down the index
 
