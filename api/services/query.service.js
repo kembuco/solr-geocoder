@@ -1,4 +1,4 @@
-const { parseAddress } = require('../services/parsing.service');
+const { parseAddress } = require('./parsing.service');
 const axios = require('axios').create({
   baseURL: process.env.SOLR_URL
 });
@@ -10,33 +10,65 @@ const {
   eq,
   fuzzy,
   group,
+  like,
   or
-} = require('../util/query.util');
+} = require('../util/solr.query.util');
+const { findIntersections } = require('../util/db.roads.util');
+const isIntersection = /([\w-,\. ]+)(?:&|\s+AND\s+)([\w-,\. ]+)/i;
 
-async function querySolr( q, debug ) {
-  return await axios.get('/select', { 
+async function queryAddresses( q, debug ) {
+  return await axios.get('/geocoder/select', { 
     params: {
       q,
-      fl: process.env.SOLR_QUERY_FL,
-      sort: process.env.SOLR_QUERY_SORT,
+      fl: process.env.SOLR_QUERY_ADDRESS_FL,
+      sort: process.env.SOLR_QUERY_ADDRESS_SORT,
+      rows: process.env.SOLR_QUERY_ADDRESS_ROWS,
+      debugQuery: debug || process.env.SOLR_QUERY_DEBUG
+    }
+  });
+}
+
+async function queryRoads( q, debug ) {
+  return await axios.get('/roads/select', { 
+    params: {
+      q,
+      fl: process.env.SOLR_QUERY_ROADS_FL,
+      sort: process.env.SOLR_QUERY_ROADS_SORT,
+      rows: process.env.SOLR_QUERY_ROADS_ROWS,
       debugQuery: debug || process.env.SOLR_QUERY_DEBUG
     }
   });
 }
 
 async function forwardQuery( address, debug = false ) {
-  // First, try to geocode the address string
-  let geocode = await querySolr(addressStringToQuery(address), debug);
+  let geocode;
 
-  // Second, parse the address into it's parts for a more expansive search
+  // See if the address is an intersection query
+  const intersection = getIntersection(address);
+  if ( intersection ) {
+    const [ left, right ] = await Promise.all([
+      queryRoads(roadToQuery(intersection.left), debug),
+      queryRoads(roadToQuery(intersection.right), debug)
+    ]);
+
+    geocode = await processIntersection(left.data.response, right.data.response);
+  }
+
+  // Try to geocode the address string
+  if ( !geocode || !geocode.data.response.numFound ) {
+    geocode = await queryAddresses(addressStringToQuery(address), debug);
+  }
+
+  // Parse the address into it's parts for a more expansive search
   if ( !geocode.data.response.numFound ) {
     const parsed = await parseAddress(address);
     
-    geocode = await querySolr(addressObjectToQuery(parsed), debug);
-
-    if ( !geocode.data.response.numFound ) {
-      geocode = await querySolr(returnAythingQuery(address), debug);
-    }
+    geocode = await queryAddresses(addressObjectToQuery(parsed), debug);
+  }
+  
+  // Return anything we can find in any field based on the address
+  if ( !geocode.data.response.numFound ) {
+    geocode = await queryAddresses(returnAythingQuery(address), debug);
   }
   
   return geocode.data;
@@ -154,13 +186,49 @@ function returnAythingQuery( terms ) {
   )
 }
 
+function roadToQuery( road ) {
+  return or(
+    like('nameS', squish(road)),
+    eq('name', road)
+  )
+}
+
+function getIntersection( address ) {
+  let [ match, left = '', right = '' ] = address.match(isIntersection) || [];
+  
+  left = left.trim();
+  right = right.trim();
+
+  return left && right && { left, right };
+}
+
+async function processIntersection( left, right ) {
+  let docs = [];
+
+  if (left.numFound, right.numFound) {
+    const leftIds = left.docs.map(({ id }) => id);
+    const rightIds = right.docs.map(({ id }) => id);
+
+    docs = await findIntersections(leftIds, rightIds);
+  }
+  
+  return { 
+    data: { 
+      response: {
+        docs,
+        numFound: docs.length
+      }
+    }
+  }
+}
+
 /**
  * Removes all whitespace from the address
  * 
  * @param {String} address A single-line address
  */
 function squish( address = '' ) {
-  return address.replace(/\s|,/g, '');
+  return address.replace(/[\s,]/g, '');
 }
 
 /**

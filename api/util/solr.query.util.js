@@ -20,9 +20,20 @@ exports.eq = eq;
  * @param {String} value Value to search for
  */
 function beginsWith( field, value ) {
-  return value ? `${eq(field, value)}*` : '';
+  return value ? `${eq(field, `${value}*`)}` : '';
 }
 exports.beginsWith = beginsWith;
+
+/**
+ * Creates a query string where field should be like value.
+ * 
+ * @param {String} field Field to search on
+ * @param {String} value Value to search for
+ */
+function like( field, value ) {
+  return value ? `${eq(field, `*${value}*`)}` : '';
+};
+exports.like = like;
 
 /**
  * Creates a query string where field should be 'like' value.
