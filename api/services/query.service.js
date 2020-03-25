@@ -76,7 +76,7 @@ async function forwardQuery( address, debug = false ) {
 exports.forwardQuery = forwardQuery;
 
 async function reverseQuery( latlon, debug = false ) {
-  const { data } = await axios.get('/select', { 
+  const { data } = await axios.get('/geocoder/select', { 
     params: {
       d: process.env.SOLR_QUERY_REVERSE_RADIUS,
       q: '*:*',
@@ -84,10 +84,12 @@ async function reverseQuery( latlon, debug = false ) {
       fq: '{!bbox}',
       sfield: 'LatLon',
       sort: 'geodist() asc',
-      fl: `${process.env.SOLR_QUERY_FL},dist:geodist()`,
+      fl: `${process.env.SOLR_QUERY_ADDRESS_FL},dist:geodist()`,
       debugQuery: debug || process.env.SOLR_QUERY_DEBUG
     }
   });
+
+  console.log(data);
 
   return data;
 }
