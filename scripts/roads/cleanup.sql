@@ -25,7 +25,8 @@ where fclass not in (
 )
 
 -- STEP 3 - Set name field to ref value if name is null
-update roads set name = ref where name is null;
+update roads set name = regexp_replace(ref, ';.*$', '') where name is null;
+update roads set name = regexp_replace(ref, ';.*$', '') where name like '%;%' and ref = name;
 
 -- STEP 4 - Find an intersection
 -- select
