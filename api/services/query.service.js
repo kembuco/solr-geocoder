@@ -1,4 +1,5 @@
 const { parseAddress } = require('./parsing.service');
+// TODO: This belongs in the search.client file
 const axios = require('axios').create({
   baseURL: process.env.SOLR_URL
 });
@@ -16,6 +17,7 @@ const {
 const { findIntersections } = require('../util/db.roads.util');
 const isIntersection = /([\w-,\. ]+)(?:&|\s+AND\s+)([\w-,\. ]+)/i;
 
+// TODO: prolly belongs in a "search.client" file?
 async function queryAddresses( q, debug ) {
   return await axios.get('/geocoder/select', { 
     params: {
@@ -91,11 +93,68 @@ async function reverseQuery( latlon, debug = false ) {
     }
   });
 
-  console.log(data);
-
   return data;
 }
 exports.reverseQuery = reverseQuery;
+
+// TODO: Golly this definitely doesn't belong here
+function chunk(array, size) {
+  let result = []
+  
+  for (let i = 0; i < array.length; i += size) {
+    let chunk = array.slice(i, i + size);
+    
+    result.push(chunk);
+  }
+  
+  return result;
+}
+
+// TODO: cleanup code and the unreadable bits.
+// TODO: too many nested async funcitons
+// TODO: throttle and test. we don't want to kill our poor solr instance
+// TODO: document this stuff
+async function batchQuery( addresses ) {
+  return new Promise(async ( resolve, reject ) => {
+    // TODO: chunk size should be configurable
+    let chunks = chunk(addresses, 250);
+    let numFound = 0;
+    let docs = [];
+
+    for ( addressChunk of chunks ) {
+      const responses = await Promise.all(addressChunk.map(async ( address ) => {
+        const q = address.split(',').map(( token, index ) => (
+          `${index == 0 ? '+' : ''}address:"${token}"`
+        )).join(' ');
+
+        const { data } = await axios.get('/addresses/select', { 
+          params: {
+            q,
+            fl: 'id, latitude, longitude, address:address_s, score',
+            rows: 1
+          }
+        });
+    
+        const [ doc ] = data.response.docs;
+    
+        if ( doc ) {
+          numFound += 1;
+        }
+        
+        return {
+          ...doc,
+          input: address,
+          score: data.response.maxScore
+        };
+      }));
+
+      docs = [...docs, ...responses];
+    }    
+
+    resolve({ response: { numFound, docs } });
+  });
+}
+exports.batchQuery = batchQuery;
 
 function addressStringToQuery( address ) {
   const simple = squish(address);
@@ -235,6 +294,11 @@ function squish( address = '' ) {
   return address.replace(/[\s,]/g, '');
 }
 
+/**
+ * Removes all special characters that would disrupt a query.
+ * 
+ * @param {String} address A single-line address
+ */
 function cleanAddress( address = '' ) {
   return address.replace(/[\+\-\!\(\)\{\}\[\]\^\"\~\*\?\:\\\/]|\&{2,}|\|{2,}/g, '');
 }
@@ -245,8 +309,7 @@ function cleanAddress( address = '' ) {
  * 
  * @param {String} address A single-line address
  */
-function expand( address ) {;
-
+function expand( address ) {
   const regex = /\s+(N|E|W|S|NE|SE|SW|NW)(\s+|,|\.)/gi;
   const directions = {
     n: 'North',

@@ -1,6 +1,7 @@
 const { 
   forwardQuery,
-  reverseQuery
+  reverseQuery,
+  batchQuery
 } = require('../services/query.service');
 
 module.exports = async function (fastify, options) {
@@ -12,7 +13,12 @@ module.exports = async function (fastify, options) {
 
   fastify.get('/geocode/reverse/:latlon', async ({ params, query }, reply) => {
     const { response } = await reverseQuery(params.latlon, query.debug || false);
-    console.log(response);
+
+    return response;
+  });
+
+  fastify.post('/geocode/batch', async ({ body }, reply) => {
+    const { response } = await batchQuery(body.addresses);
 
     return response;
   });

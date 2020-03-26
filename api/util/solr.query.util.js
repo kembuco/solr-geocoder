@@ -1,3 +1,5 @@
+// TODO: rename this to search.query.util.js  
+
 /**
  * Creates a query string where field should equal value exactly.
  * 
