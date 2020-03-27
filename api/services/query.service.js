@@ -123,28 +123,42 @@ async function batchQuery( addresses ) {
 
     for ( addressChunk of chunks ) {
       const responses = await Promise.all(addressChunk.map(async ( address ) => {
-        const q = address.split(',').map(( token, index ) => (
+        let addressTokens = address.split(',');
+        let q = addressTokens.map(( token, index ) => (
           `${index == 0 ? '+' : ''}address:"${token}"`
         )).join(' ');
 
-        const { data } = await axios.get('/addresses/select', { 
+        let response = await axios.get('/addresses/select', { 
           params: {
             q,
-            fl: 'id, latitude, longitude, address:address_s, score',
+            fl: 'lat:latitude,lon:longitude,gaddr:address_s',
             rows: 1
           }
         });
     
-        const [ doc ] = data.response.docs;
+        let [ doc ] = response.data.response.docs;
     
         if ( doc ) {
           numFound += 1;
+        } else {
+          addressTokens = [ ...addressTokens[0].split(' '), ...addressTokens.slice(1) ];
+          
+          q = addressTokens.map(token => `address:"${token}"`).join(' ');
+          
+          response = await axios.get('/addresses/select', { 
+            params: {
+              q,
+              fl: 'lat:latitude,lon:longitude,gaddr:address_s',
+              rows: 1
+            }
+          });
         }
+    
+        [ doc ] = response.data.response.docs;
         
         return {
           ...doc,
-          input: address,
-          score: data.response.maxScore
+          oaddr: address
         };
       }));
 
