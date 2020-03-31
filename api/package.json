@@ -10,7 +10,8 @@
     "pg": "^7.18.2",
     "pino": "^5.17.0",
     "pino-pretty": "^3.6.1",
-    "python-shell": "^1.0.8"
+    "python-shell": "^1.0.8",
+    "string-similarity": "^4.0.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"
