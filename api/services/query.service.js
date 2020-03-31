@@ -1,3 +1,4 @@
+const ss = require('string-similarity');
 const { parseAddress } = require('./parsing.service');
 // TODO: This belongs in the search.client file
 const axios = require('axios').create({
@@ -158,6 +159,7 @@ async function batchQuery( addresses ) {
         
         return {
           ...doc,
+          score: score(address, doc.gaddr),
           oaddr: address
         };
       }));
@@ -169,6 +171,19 @@ async function batchQuery( addresses ) {
   });
 }
 exports.batchQuery = batchQuery;
+
+function score( oaddr, gaddr ) {
+  const normalize = ( addr ) => {
+    const tokens = addr.toLowerCase().replace(/ /g, '').split(',');
+    
+    return [ tokens[0], tokens.pop()].join('');
+  };
+
+  return Number.parseFloat((ss.compareTwoStrings(
+    normalize(oaddr),
+    normalize(gaddr)
+  ) * 100).toFixed(2));
+}
 
 function addressStringToQuery( address ) {
   const simple = squish(address);
