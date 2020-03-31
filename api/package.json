@@ -11,5 +11,11 @@
     "pino": "^5.17.0",
     "pino-pretty": "^3.6.1",
     "python-shell": "^1.0.8"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  },
+  "scripts": {
+    "dev:api": "nodemon api.js"
   }
 }
