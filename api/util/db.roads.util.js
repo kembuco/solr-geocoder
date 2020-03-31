@@ -29,3 +29,22 @@ exports.findIntersections = async function findIntersections( leftIds, rightIds 
     }
   });
 }
+
+/**
+ * Query to find an address based on OSM line and point data:
+
+    select
+        pop.osm_id as popid,
+        pol.osm_id as polid,
+        pop."addr:housenumber" street_number,
+        pol.name as street_name,
+        st_asgeojson(st_transform(pop.way, 4326)) as point,
+        st_asgeojson(st_transform(pol.way, 4326)) as line
+    from 
+        planet_osm_point pop,
+        planet_osm_line pol
+    where
+        st_dwithin(pop.way, pol.way, 20) and
+        pol.name = 'Sheridan Boulevard' AND
+        pop."addr:housenumber" = '5136';
+ */
