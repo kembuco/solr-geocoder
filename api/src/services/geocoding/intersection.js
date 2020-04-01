@@ -1,6 +1,5 @@
 const { queryStreets } = require('../../search/queries');
 const { findIntersections } = require('../../database/streets');
-const { parseIntersection } = require('./utils');
 const {
   eq,
   like,
@@ -8,21 +7,13 @@ const {
 } = require('../../search/query-builder');
 const squish = require('../../util/squish');
 
-module.exports = async function intersectionQuery( address, debug = false ) {
-  return new Promise(async ( resolve, reject ) => {
-    const intersection = parseIntersection(address);
-  
-    if ( intersection ) {
-      const [ left, right ] = await Promise.all([
-        queryStreets({ q: roadToQuery(intersection.left) }, debug),
-        queryStreets({ q: roadToQuery(intersection.right) }, debug)
-      ]);
-  
-      resolve(await processIntersection(left.data.response, right.data.response));
-    } else {
-      resolve(null);
-    }
-  });
+module.exports = async function intersectionQuery( intersection, debug = false ) {
+  const [ left, right ] = await Promise.all([
+    queryStreets({ q: roadToQuery(intersection.left) }, debug),
+    queryStreets({ q: roadToQuery(intersection.right) }, debug)
+  ]);
+
+  return await processIntersection(left, right);
 }
 
 function roadToQuery( road ) {
@@ -42,12 +33,8 @@ async function processIntersection( left, right ) {
     docs = await findIntersections(leftIds, rightIds);
   }
   
-  return { 
-    data: { 
-      response: {
-        docs,
-        numFound: docs.length
-      }
-    }
+  return {
+    numFound: docs.length,
+    docs
   }
 }

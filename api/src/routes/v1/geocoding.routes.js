@@ -6,20 +6,14 @@ const {
 
 module.exports = async function (fastify, options) {
   fastify.get('/geocode/forward/:address', async ({ params, query }, reply) => {
-    const { response } = await forwardQuery(params.address, query.debug || false);
-
-    return response;
+    return await forwardQuery(params.address, query.debug || false);
   });
 
   fastify.get('/geocode/reverse/:latlon', async ({ params, query }, reply) => {
-    const { response } = await reverseQuery(params.latlon, query.debug || false);
-
-    return response;
+    return await reverseQuery(params.latlon, query.debug || false);
   });
 
   fastify.post('/geocode/batch', async ({ body }, reply) => {
-    const { response } = await batchQuery(body.addresses);
-
-    return response;
+    return await batchQuery(body.addresses);
   });
 }

@@ -1,7 +1,7 @@
-const { client } = require('../providers/http.provider');
+const { client, getData } = require('../providers/http.provider');
 
-exports.queryGeocoder = function queryGeocoder( params, debug ) {
-  return client.get('/geocoder/select', { 
+exports.queryGeocoder = async function queryGeocoder( params, debug ) {
+  const { response } = await getData('/geocoder/select', { 
     params: {
       ...params,
       fl: process.env.SOLR_QUERY_ADDRESS_FL,
@@ -10,10 +10,12 @@ exports.queryGeocoder = function queryGeocoder( params, debug ) {
       debugQuery: debug || process.env.SOLR_QUERY_DEBUG
     }
   });
+  
+  return response;
 };
 
-exports.queryStreets = function queryStreets( params, debug ) {
-  return client.get('/streets/select', { 
+exports.queryStreets = async function queryStreets( params, debug ) {
+  const { response } = await getData('/streets/select', { 
     params: {
       ...params,
       fl: process.env.SOLR_QUERY_STREETS_FL,
@@ -22,14 +24,18 @@ exports.queryStreets = function queryStreets( params, debug ) {
       debugQuery: debug || process.env.SOLR_QUERY_DEBUG
     }
   });
+
+  return response;
 };
 
-exports.queryAddresses = function queryAddresses( params, debug) {
-  return client.get('/addresses/select', { 
+exports.queryAddresses = async function queryAddresses( params, debug) {
+  const { response } = await getData('/addresses/select', { 
     params: {
       ...params,
       fl: 'lat:latitude,lon:longitude,gaddr:address_s',
       rows: 1
     }
   });
+
+  return response;
 }
