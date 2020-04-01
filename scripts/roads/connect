@@ -1,5 +1,0 @@
-export PGHOST=127.0.0.1
-export PGPORT=2345
-export PGDATABASE=gis
-export PGUSER=kevin
-export PGPASSWORD=password

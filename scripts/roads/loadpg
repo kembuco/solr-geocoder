@@ -1,3 +1,0 @@
-# TODO: move to js and get rid of absolute urls
-. ./connect
-shp2pgsql -d -I -g geometry -s 4326 /Users/kevin/dev/simplefish/cdor/solr-geocoder/data/roads/gis_osm_roads_free_1 roads | psql

@@ -1,3 +1,0 @@
-# TODO: move to js and get rid of absolute urls
-. ./connect
-psql -c "\copy (SELECT gid, name FROM roads) to '/Users/kevin/dev/simplefish/cdor/solr-geocoder/data/roads/roads.csv' with csv"

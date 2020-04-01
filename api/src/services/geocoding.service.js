@@ -31,13 +31,13 @@ async function queryAddresses( q, debug ) {
   });
 }
 
-async function queryRoads( q, debug ) {
-  return await axios.get('/roads/select', { 
+async function queryStreets( q, debug ) {
+  return await axios.get('/streets/select', { 
     params: {
       q,
-      fl: process.env.SOLR_QUERY_ROADS_FL,
-      sort: process.env.SOLR_QUERY_ROADS_SORT,
-      rows: process.env.SOLR_QUERY_ROADS_ROWS,
+      fl: process.env.SOLR_QUERY_STREETS_FL,
+      sort: process.env.SOLR_QUERY_STREETS_SORT,
+      rows: process.env.SOLR_QUERY_STREETS_ROWS,
       debugQuery: debug || process.env.SOLR_QUERY_DEBUG
     }
   });
@@ -52,8 +52,8 @@ async function forwardQuery( address, debug = false ) {
   const intersection = getIntersection(address);
   if ( intersection ) {
     const [ left, right ] = await Promise.all([
-      queryRoads(roadToQuery(intersection.left), debug),
-      queryRoads(roadToQuery(intersection.right), debug)
+      queryStreets(roadToQuery(intersection.left), debug),
+      queryStreets(roadToQuery(intersection.right), debug)
     ]);
 
     geocode = await processIntersection(left.data.response, right.data.response);
