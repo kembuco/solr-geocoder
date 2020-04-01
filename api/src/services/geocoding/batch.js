@@ -22,7 +22,7 @@ module.exports = async function batchQuery( addresses ) {
 
         let response = await queryAddresses({ q });
     
-        let [ doc ] = response.data.response.docs;
+        let [ doc ] = response.docs;
     
         if ( doc ) {
           numFound += 1;
@@ -34,7 +34,7 @@ module.exports = async function batchQuery( addresses ) {
           response = await queryAddresses({ q });
         }
     
-        [ doc ] = response.data.response.docs;
+        [ doc ] = response.docs;
         
         return {
           ...doc,
@@ -46,6 +46,6 @@ module.exports = async function batchQuery( addresses ) {
       docs = [...docs, ...responses];
     }    
 
-    resolve({ response: { numFound, docs } });
+    resolve({ numFound, docs });
   });
 }

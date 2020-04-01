@@ -1,9 +1,6 @@
 const { queryGeocoder } = require('../../search/queries');
 const intersectionQuery = require('./intersection');
-const {
-  cleanAddress,
-  expandDirections
-} = require('./utils');
+const { expandDirections } = require('./utils');
 const {
   and,
   beginsWith,
@@ -17,30 +14,21 @@ const {
 const squish = require('../../util/squish');
 
 module.exports = async function forwardQuery( address, debug = false ) {
-  let geocode;
-
-  address = cleanAddress(address);
-
-  geocode = await intersectionQuery(address, debug);
-
-  // Try to geocode the address string
-  if ( !geocode || !geocode.data.response.numFound ) {
-    geocode = await queryGeocoder({ q: addressStringToQuery(address) }, debug);
-  }
+  let geocoded = await queryGeocoder({ q: addressStringToQuery(address) }, debug);
 
   // Parse the address into it's parts for a more expansive search
-  if ( !geocode.data.response.numFound ) {
+  if ( !geocoded.numFound ) {
     const parsed = await parseAddress(address);
     
-    geocode = await queryGeocoder({ q: addressObjectToQuery(parsed) }, debug);
+    geocoded = await queryGeocoder({ q: addressObjectToQuery(parsed) }, debug);
   }
   
   // Return anything we can find in any field based on the address
-  if ( !geocode.data.response.numFound ) {
-    geocode = await queryGeocoder({ q: returnAythingQuery(address) }, debug);
+  if ( !geocoded.numFound ) {
+    geocoded = await queryGeocoder({ q: returnAythingQuery(address) }, debug);
   }
   
-  return geocode.data;
+  return geocoded;
 }
 
 function addressStringToQuery( address ) {
