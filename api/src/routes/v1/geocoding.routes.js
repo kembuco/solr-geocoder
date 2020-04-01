@@ -2,7 +2,7 @@ const {
   forwardQuery,
   reverseQuery,
   batchQuery
-} = require('../services/query.service');
+} = require('../../services/geocoding.service');
 
 module.exports = async function (fastify, options) {
   fastify.get('/geocode/forward/:address', async ({ params, query }, reply) => {

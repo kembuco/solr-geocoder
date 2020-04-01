@@ -7,7 +7,7 @@ const fastify = require('fastify')({
   }
 });
 
-fastify.register(require('./routes/geocode.route'), { prefix: 'v1' });
+fastify.register(require('./src/routes/v1/geocoding.routes'), { prefix: 'v1' });
 
 const start = async () => {
   try {

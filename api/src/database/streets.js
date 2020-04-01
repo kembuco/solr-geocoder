@@ -1,4 +1,4 @@
-const database = require('../services/database.service');
+const database = require('../providers/database.provider');
 
 exports.findIntersections = async function findIntersections( leftIds, rightIds ) {
   const { rows } = await database.query(`
