@@ -26,7 +26,7 @@ Todo:
   ☐ Interpolation of addresses
   ☐ Rename everything from geocoder to addresses for addresses
   ☐ Compare openaddresses with what we have. (\\digitalmedia\GIS-GCDP\EnterpriseWorkspaces\CSAD\CSADPROD\CSAD_2020\DataCall_Jan\CSADmaster\Public.gdb)
-  ☐ Figure out st/saint, mt/mount for roads like "saint vrain street" or "mount lincoln street, palisade"
+  ☐ Figure out st/saint, mt/mount for streets like "saint vrain street" or "mount lincoln street, palisade"
   ☐ Make an ArcGIS compatible endpoint
   ☐ CLI: core should be an argument and not an option. (i.e. create-core addresses vs create-core -c addresses)
   ☐ CLI: fix it so it is useful ( don't expose solr internals)
