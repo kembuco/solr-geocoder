@@ -1,5 +1,5 @@
 const ss = require('string-similarity');
-const { parseAddress } = require('./parsing.service');
+const { parseAddress } = require('./address-parsing.service');
 // TODO: This belongs in the search.client file
 const axios = require('axios').create({
   baseURL: process.env.SOLR_URL
@@ -14,8 +14,8 @@ const {
   group,
   like,
   or
-} = require('../util/solr.query.util');
-const { findIntersections } = require('../util/db.roads.util');
+} = require('../search/query-builder');
+const { findIntersections } = require('../database/streets');
 const isIntersection = /([\w-,\. ]+)(?:&|\s+AND\s+)([\w-,\. ]+)/i;
 
 // TODO: prolly belongs in a "search.client" file?
