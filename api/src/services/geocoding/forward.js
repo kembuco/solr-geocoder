@@ -3,7 +3,7 @@ const { expandDirections } = require('./utils');
 const {
   beginsWith,
   containsPhrase,
-  eq
+  fuzzy
 } = require('../../search/query-builder');
 const squish = require('../../util/squish');
 
@@ -11,7 +11,7 @@ function forwardQuery( address ) {
   return queryAddressesWaterfall(
     beginsWithQuery(address),
     phraseQuery(address),
-    tokenizedQuery(address)
+    fuzzyQuery(address)
   );
 }
 module.exports = forwardQuery;
@@ -33,7 +33,9 @@ function phraseQuery( address ) {
   return query(containsPhrase('address', address));
 }
 
-// A bit slower, but has decent accuracy for multiple tokens
-function tokenizedQuery( address ) {  
-  return query(eq('address', address));
+// A bit slower, but finds stuff the others can't
+function fuzzyQuery( address ) {
+  const tokens = address.split(/\s|,/g).filter(t => t);
+
+  return query(fuzzy('address', ...tokens));
 }

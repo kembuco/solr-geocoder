@@ -13,7 +13,7 @@ exports.eq = eq;
  * Creates a query string where field should begin with value.
  * 
  * @param {String} field Field to search on
- * @param {Array<String>} values Values to search for
+ * @param {...String} values Values to search for
  */
 function beginsWith( field, ...values ) {
   const value = values && values.map(v => `${v}*`).join(' ');
@@ -26,7 +26,7 @@ exports.beginsWith = beginsWith;
  * Creates a query string where field contains value as a phrase.
  * 
  * @param {String} field Field to search on
- * @param {Array<String>} values Values to search for
+ * @param {...String} values Values to search for
  */
 function containsPhrase( field, ...values ) {
   const value = values && values.map(v => `"${v}"`).join(' ');
@@ -34,3 +34,16 @@ function containsPhrase( field, ...values ) {
   return value ? eq(field, value) : '';
 }
 exports.containsPhrase = containsPhrase;
+
+/**
+ * Creates a query string where field is "fuzzy like" value.
+ * 
+ * @param {String} field Field to search on
+ * @param {...String} values Values to search for
+ */
+function fuzzy( field, ...values ) {
+  const value = values && values.map(v => `${v}~`).join(' ');
+
+  return value ? eq(field, value) : '';
+}
+exports.fuzzy = fuzzy;
