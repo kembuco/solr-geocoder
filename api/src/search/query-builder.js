@@ -7,11 +7,7 @@
  * @param {String} value Value to search for
  */
 function eq( field, value ) {
-  if ( value && value.split(' ').length > 1 ) {
-    value = `"${value}"`;
-  }
-
-  return value ? `${field}:${value}` : '';
+  return value ? `${field}:(${value})` : '';
 }
 exports.eq = eq;
 
@@ -19,12 +15,27 @@ exports.eq = eq;
  * Creates a query string where field should begin with value.
  * 
  * @param {String} field Field to search on
- * @param {String} value Value to search for
+ * @param {Array<String>} values Values to search for
  */
-function beginsWith( field, value ) {
-  return value ? `${eq(field, `${value}*`)}` : '';
+function beginsWith( field, ...values ) {
+  const value = values && values.map(v => `${v}*`).join(' ');
+
+  return value ? eq(field, value) : '';
 }
 exports.beginsWith = beginsWith;
+
+/**
+ * Creates a query string where field contains value as a phrase.
+ * 
+ * @param {String} field Field to search on
+ * @param {Array<String>} values Values to search for
+ */
+function containsPhrase( field, ...values ) {
+  const value = values && values.map(v => `"${v}"`).join(' ');
+
+  return value ? eq(field, value) : '';
+}
+exports.containsPhrase = containsPhrase;
 
 /**
  * Creates a query string where field should be like value.
@@ -33,7 +44,7 @@ exports.beginsWith = beginsWith;
  * @param {String} value Value to search for
  */
 function like( field, value ) {
-  return value ? `${eq(field, `*${value}*`)}` : '';
+  return value ? eq(field, `*${value}*`) : '';
 }
 exports.like = like;
 

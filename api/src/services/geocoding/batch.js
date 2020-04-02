@@ -112,7 +112,8 @@ function secondPass( address ) {
 
 async function queryComponents( components, augment = noopAugmentation ) {
   let { docs } = await queryAddresses({
-    q: augment(toQuery(components))
+    q: augment(toQuery(components)),
+    rows: 1
   });
 
   return docs;
