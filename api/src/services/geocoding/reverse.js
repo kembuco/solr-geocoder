@@ -1,14 +1,14 @@
-const { queryGeocoder } = require('../../search/queries');
+const { queryAddresses } = require('../../search/queries');
 
-module.exports = async function reverseQuery( latlon, debug = false ) {
-  return await queryGeocoder({
+module.exports = async function reverseQuery( latlon ) {
+  return await queryAddresses({
     d: process.env.SOLR_QUERY_REVERSE_RADIUS,
     q: '*:*',
     pt: latlon,
     fq: '{!bbox}',
-    sfield: 'LatLon',
+    sfield: 'latlon',
     sort: 'geodist() asc',
     fl: `${process.env.SOLR_QUERY_ADDRESS_FL},dist:geodist()`,
-    debugQuery: debug || process.env.SOLR_QUERY_DEBUG
+    debugQuery: process.env.SOLR_QUERY_DEBUG
   });
 }
