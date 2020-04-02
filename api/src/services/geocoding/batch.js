@@ -3,7 +3,7 @@ const { scoreGeocode } = require('./utils');
 const { eq } = require('../../search/query-builder');
 const chunkAddresses = require('../../util/chunk');
 
-// TODO: throttle and test. we don't want to kill our poor solr instance
+// TODO: throttle and test. we don't want to kill our poor solr instance.
 
 /**
  * This function takes a list of addresses and geocodes them by searching
@@ -11,7 +11,7 @@ const chunkAddresses = require('../../util/chunk');
  * 
  * @param {Array<String>} addresses List of addresses to search for.
  */
-async function batchQuery( addresses ) {
+function batchQuery( addresses ) {
   return new Promise(async ( resolve, reject ) => {
     let chunks = chunkAddresses(addresses, process.env.BATCH_CHUNK_SIZE);
     let numFound = 0;
@@ -95,10 +95,10 @@ function firstPass( address ) {
 
 function secondPass( address ) {
   const components = address.split(',');
-  const splitFirstComponent = components[0].split(/\s*/g);
+  const firstComponentTokens = components[0].split(/\s*/g);
   const lastComponent = components.slice(components.length - 1);
 
-  return queryComponents([ ...splitFirstComponent, ...lastComponent ]);
+  return queryComponents([ ...firstComponentTokens, ...lastComponent ]);
 }
 
 async function queryComponents( components, augment = noopAugmentation ) {
