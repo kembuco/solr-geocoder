@@ -1,5 +1,8 @@
 const { queryAddressesWaterfall } = require('../../search/queries');
-const { expandDirections } = require('./utils');
+const { 
+  expandDirections,
+  scoreGeocode
+} = require('./utils');
 const {
   beginsWith,
   containsPhrase,
@@ -7,12 +10,19 @@ const {
 } = require('../../search/query-builder');
 const squish = require('../../util/squish');
 
-function forwardQuery( address ) {
-  return queryAddressesWaterfall(
+async function forwardQuery( address ) {
+  const response = await queryAddressesWaterfall(
     beginsWithQuery(address),
     phraseQuery(address),
     fuzzyQuery(address)
   );
+  
+  response.oaddr = address;
+  response.docs.forEach(( doc ) => {
+    doc.score = scoreGeocode(address, doc.gaddr);
+  });
+
+  return response
 }
 module.exports = forwardQuery;
 
