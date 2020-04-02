@@ -1,4 +1,4 @@
-const { client, getData } = require('../providers/http.provider');
+const { getData } = require('../providers/http.provider');
 
 exports.queryGeocoder = async function queryGeocoder( params, debug ) {
   const { response } = await getData('/geocoder/select', { 
@@ -28,7 +28,7 @@ exports.queryStreets = async function queryStreets( params, debug ) {
   return response;
 };
 
-exports.queryAddresses = async function queryAddresses( params, debug) {
+exports.queryAddresses = async function queryAddresses( params ) {
   const { response } = await getData('/addresses/select', { 
     params: {
       ...params,

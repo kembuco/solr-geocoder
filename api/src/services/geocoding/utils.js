@@ -6,6 +6,7 @@ const ss = require('string-similarity');
  * @param {String} address A single-line address
  */
 function cleanAddress( address = '' ) {
+  // eslint-disable-next-line no-useless-escape
   return address.replace(/[\+\-\!\(\)\{\}\[\]\^\"\~\*\?\:\\\/]|\&{2,}|\|{2,}/g, '');
 }
 exports.cleanAddress = cleanAddress;
@@ -59,7 +60,9 @@ exports.scoreGeocode = scoreGeocode;
  * @param {String} address Address string that could be an intersection
  */
 function parseIntersection( address ) {
+  // eslint-disable-next-line no-useless-escape
   const regex = /([\w-,\. ]+)(?:&|\s+AND\s+)([\w-,\. ]+)/i;
+  // eslint-disable-next-line no-unused-vars
   let [ match, left = '', right = '' ] = address.match(regex) || [];
   
   left = left.trim();

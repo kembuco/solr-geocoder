@@ -1,6 +1,6 @@
 const { queryGeocoder } = require('../../search/queries');
-const intersectionQuery = require('./intersection');
 const { expandDirections } = require('./utils');
+const { parseAddress } = require('../address-parsing.service');
 const {
   and,
   beginsWith,
@@ -8,7 +8,6 @@ const {
   eq,
   fuzzy,
   group,
-  like,
   or
 } = require('../../search/query-builder');
 const squish = require('../../util/squish');
@@ -46,14 +45,17 @@ function addressObjectToQuery({
   AddressNumberSuffix, // a modifier after an address number, e.g 'B', '1/2'
   StreetName, // street name, excluding type & direction
   StreetNamePreDirectional, // a direction before a street name, e.g. 'North', 'S'
+  // eslint-disable-next-line no-unused-vars
   StreetNamePreModifier, // a modifier before a street name that is not a direction, e.g. 'Old'
   StreetNamePreType, // a street type that comes before a street name, e.g. 'Route', 'Ave' 
   StreetNamePostDirectional, // a direction after a street name, e.g. 'North', 'S'
+  // eslint-disable-next-line no-unused-vars
   StreetNamePostModifier, // a modifier after a street name, e.g. 'Ext'
   StreetNamePostType, // a street type that comes after a street name, e.g. 'Avenue', 'Rd'
   OccupancyType, // a type of occupancy within a building, e.g. 'Suite', 'Apt', 'Floor'
   OccupancyIdentifier, // the identifier of an occupancy, often a number or letter
   PlaceName, // city
+  // eslint-disable-next-line no-unused-vars
   StateName, // state
   ZipCode, // zipcode
 }) {
