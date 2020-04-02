@@ -4,11 +4,11 @@ const { getData } = require('../providers/http.provider');
 async function queryStreets( params ) {
   const { response } = await getData('/streets/select', { 
     params: {
-      ...params,
       fl: process.env.SOLR_QUERY_STREETS_FL,
       sort: process.env.SOLR_QUERY_STREETS_SORT,
       rows: process.env.SOLR_QUERY_STREETS_ROWS,
-      debugQuery: process.env.SOLR_QUERY_DEBUG
+      debugQuery: process.env.SOLR_QUERY_DEBUG,
+      ...params
     }
   });
 
@@ -46,11 +46,11 @@ exports.queryStreetsParallel = queryStreetsParallel;
 async function queryAddresses( params ) {
   const { response } = await getData('/addresses/select', { 
     params: {
-      ...params,
       fl: process.env.SOLR_QUERY_ADDRESS_FL,
       rows: process.env.SOLR_QUERY_ADDRESS_ROWS,
       sort: process.env.SOLR_QUERY_ADDRESS_SORT,
-      debugQuery: process.env.SOLR_QUERY_DEBUG
+      debugQuery: process.env.SOLR_QUERY_DEBUG,
+      ...params
     }
   });
 
