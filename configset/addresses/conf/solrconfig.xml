@@ -348,7 +348,7 @@
     <processor class="solr.RunUpdateProcessorFactory"/>
   </updateRequestProcessorChain>
 
-  <updateRequestProcessorChain name="geocoder-update-chain" default="true">
+  <updateRequestProcessorChain name="fault-tolerant-update-chain" default="true">
     <processor class="solr.TolerantUpdateProcessorFactory"/>
 
     <processor class="solr.LogUpdateProcessorFactory" /> 

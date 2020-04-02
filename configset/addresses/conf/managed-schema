@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema name="geocoder" version="1.6">
+<schema name="addresses" version="1.6">
   <uniqueKey>id</uniqueKey>
 
   <!-- DO NOT REMOVE -->
@@ -53,11 +53,23 @@
   </fieldType>
   
   <field name="id" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
-  <field name="address" type="address" stored="true" indexed="true" multiValued="true" />
-  <field name="address_s" type="squished" stored="true" indexed="true" multiValued="false" />
+  <field name="address" type="address" />
+  <field name="address_s" type="squished" />
   <field name="latitude" type="pdouble"/>
   <field name="longitude" type="pdouble"/>
   <field name="latlon" type="location"/>
+  <field name="AddrNum" type="string" indexed="false" stored="true"/>
+  <field name="County" type="string" indexed="false" stored="true"/>
+  <field name="NumSuf" type="string" indexed="false" stored="true"/>
+  <field name="PlaceName" type="string" indexed="false" stored="true"/>
+  <field name="PostDir" type="string" indexed="false" stored="true"/>
+  <field name="PostType" type="string" indexed="false" stored="true"/>
+  <field name="PreDir" type="string" indexed="false" stored="true"/>
+  <field name="PreType" type="string" indexed="false" stored="true"/>
+  <field name="StreetName" type="string" indexed="false" stored="true"/>
+  <field name="UnitNumber" type="string" indexed="false" stored="true"/>
+  <field name="UnitType" type="string" indexed="false" stored="true"/>
+  <field name="Zipcode" type="string" indexed="false" stored="true"/>
   <field name="_root_" type="string" docValues="false" indexed="true" stored="false"/>
   <field name="_version_" type="plong" indexed="false" stored="false"/>
 
