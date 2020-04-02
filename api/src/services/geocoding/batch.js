@@ -1,3 +1,4 @@
+/* eslint-disable no-async-promise-executor */
 const { queryAddresses } = require('../../search/queries');
 const { scoreGeocode } = require('./utils');
 const { eq } = require('../../search/query-builder');
@@ -17,19 +18,23 @@ function batchQuery( addresses ) {
     let numFound = 0;
     let docs = [];
 
-    for ( chunk of chunks ) {
-      const responses = await Promise.all(chunk.map(findAddress));
+    try {
+      for ( let chunk of chunks ) {
+        const responses = await Promise.all(chunk.map(findAddress));
 
-      // Update numFound with documents that have a score. Based on our threshold,
-      // document scores will either be 0 or > 70, hence the round function.
-      numFound += responses.reduce(( acc, doc ) => acc + Math.round(doc.score * .01), 0);
+        // Update numFound with documents that have a score. Based on our threshold,
+        // document scores will either be 0 or > 70, hence the round function.
+        numFound += responses.reduce(( acc, doc ) => acc + Math.round(doc.score * .01), 0);
 
-      docs = [ ...docs, ...responses ];
-    }    
+        docs = [ ...docs, ...responses ];
+      }    
 
-    resolve({ numFound, docs });
+      resolve({ numFound, docs });
+    } catch ( e ) {
+      reject(e);
+    }
   });
-};
+}
 module.exports = batchQuery;
 
 /**
@@ -74,16 +79,20 @@ async function findAddress( address ) {
 
 async function waterfallQuery( ...passes ) {
   return new Promise(async ( resolve, reject ) => {
-    for ( pass of passes ) {
-      [ doc ] = await pass();
+    try {
+      for ( let pass of passes ) {
+        let [ doc ] = await pass();
 
-      if ( doc ) {
-        resolve(doc);
-        break;
+        if ( doc ) {
+          resolve(doc);
+          break;
+        }
       }
-    }
 
-    resolve(null);
+      resolve(null);
+    } catch ( e ) {
+      reject(e);
+    }
   });
 }
 

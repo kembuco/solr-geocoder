@@ -12,7 +12,7 @@ function eq( field, value ) {
   }
 
   return value ? `${field}:${value}` : '';
-};
+}
 exports.eq = eq;
 
 /**
@@ -34,7 +34,7 @@ exports.beginsWith = beginsWith;
  */
 function like( field, value ) {
   return value ? `${eq(field, `*${value}*`)}` : '';
-};
+}
 exports.like = like;
 
 /**

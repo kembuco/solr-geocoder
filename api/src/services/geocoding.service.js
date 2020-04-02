@@ -7,13 +7,13 @@ const {
 
 exports.forwardQuery = async function( address, debug ) {
   const cleaned = cleanAddress(address);
-  const intersection = parseIntersection(address);
+  const intersection = parseIntersection(cleaned);
   let response;
 
   if (intersection) {
     response = await intersectionQuery(intersection, debug);
   } else {
-    response = await forwardQuery(address, debug);
+    response = await forwardQuery(cleaned, debug);
   }
   
   return response;
