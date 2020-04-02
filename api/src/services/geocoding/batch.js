@@ -1,7 +1,10 @@
 /* eslint-disable no-async-promise-executor */
-const { queryAddresses } = require('../../search/queries');
+const { queryAddressesWaterfall } = require('../../search/queries');
 const { scoreGeocode } = require('./utils');
-const { eq } = require('../../search/query-builder');
+const { 
+  eq,
+  fuzzy
+ } = require('../../search/query-builder');
 const chunkAddresses = require('../../util/chunk');
 
 // TODO: throttle and test. we don't want to kill our poor solr instance.
@@ -24,7 +27,7 @@ function batchQuery( addresses ) {
 
         // Update numFound with documents that have a score. Based on our threshold,
         // document scores will either be 0 or > 70, hence the round function.
-        numFound += responses.reduce(( acc, doc ) => acc + Math.round(doc.score * .01), 0);
+        numFound += responses.reduce(( accumulator, doc ) => accumulator + Math.round(doc.score * .01), 0);
 
         docs = [ ...docs, ...responses ];
       }    
@@ -42,26 +45,24 @@ module.exports = batchQuery;
  * searches Solr for it in two parts:
  * 
  * 1. It does phrase queries based on the different components, separated by
- *    a comma in the address. ("101 S. Main St.", "Denver", "CO", "80222") 
- *    Where the first component is required.
+ *    a comma in the address. ("101 S. Main St.", "Denver", "CO", "80222"). The
+ *    first component is required.
  * 2. If nothing is found, it then does a more expensive query by splitting the
  *    first component by white space ("101", "S.", "Main", "St.") along with the
  *    last component (usually zipcode) and or'ing them in the query.
  * 
  * Example queries:
- * 1. +address:"101 S. Main St." address:"Denver" address:"CO", address:"80222"
- * 2. address:101 address:S. address:Main address:St. address:80222
+ * 1. address:("101 S. Main St." "Denver" "CO" "80222")
+ * 2. address:(101~ S~ Main~ St~ 80222~)
  * 
  * @param {String} address Takes a single address and geocodes it
  */
 async function findAddress( address ) {
-  const defaultDoc = {
-    oaddr: address
-  };
-
-  let doc = await waterfallQuery(
-    () => firstPass(address),
-    () => secondPass(address)
+  const defaultDoc = { oaddr: address };
+  const components = address.split(',');
+  let { docs: [ doc ] } = await queryAddressesWaterfall(
+    phraseQuery(components),
+    fuzzyQuery(components)
   );
   let score = scoreGeocode(address, doc.gaddr);
 
@@ -77,60 +78,21 @@ async function findAddress( address ) {
   } : defaultDoc;
 }
 
-async function waterfallQuery( ...passes ) {
-  return new Promise(async ( resolve, reject ) => {
-    try {
-      for ( let pass of passes ) {
-        let [ doc ] = await pass();
-
-        if ( doc ) {
-          resolve(doc);
-          break;
-        }
-      }
-
-      resolve(null);
-    } catch ( e ) {
-      reject(e);
-    }
-  });
+function toQuery( q ) {
+  return { q, rows: 1 };
 }
 
-function firstPass( address ) {
-  const components = address.split(',');
-
-  return queryComponents(components, requiredAugmentation);
+function phraseQuery([ firstComponent, ...components ]) {
+  const value = `+"${firstComponent}" ${components.map(v => `"${v}"`).join(' ')}`;
+  
+  // Make the first component required by adding a "+" before it
+  return toQuery(eq('address', value));
 }
 
-function secondPass( address ) {
-  const components = address.split(',');
-  const firstComponentTokens = components[0].split(/\s*/g);
-  const lastComponent = components.slice(components.length - 1);
+function fuzzyQuery([ firstComponent, ...components ]) {
+  // Split the first component on spaces, filter out falsy values
+  const firstComponentTokens = firstComponent.split(/\s/).filter(t => t);
+  let lastComponent = components.slice(components.length - 1);
 
-  return queryComponents([ ...firstComponentTokens, ...lastComponent ]);
-}
-
-async function queryComponents( components, augment = noopAugmentation ) {
-  let { docs } = await queryAddresses({
-    q: augment(toQuery(components)),
-    rows: 1
-  });
-
-  return docs;
-}
-
-function requiredAugmentation( query ) {
-  return `+${query}`;
-}
-
-function noopAugmentation( query ) {
-  return query;
-}
-
-function toQuery( components ) {
-  return components.map(toCriteria).join(' ');
-}
-
-function toCriteria( component ) {
-  return eq('address', component);
+  return toQuery(fuzzy('address', ...[...firstComponentTokens, ...lastComponent]));
 }
