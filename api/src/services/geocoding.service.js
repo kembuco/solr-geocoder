@@ -5,15 +5,15 @@ const {
   parseIntersection
 } = require('./geocoding/utils');
 
-exports.forwardQuery = async function( address, debug ) {
+exports.forwardQuery = async function( address ) {
   const cleaned = cleanAddress(address);
   const intersection = parseIntersection(cleaned);
   let response;
 
   if (intersection) {
-    response = await intersectionQuery(intersection, debug);
+    response = await intersectionQuery(intersection);
   } else {
-    response = await forwardQuery(cleaned, debug);
+    response = await forwardQuery(cleaned);
   }
   
   return response;

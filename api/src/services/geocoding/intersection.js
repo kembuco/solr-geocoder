@@ -1,26 +1,18 @@
-const { queryStreets } = require('../../search/queries');
+const { queryStreetsParallel } = require('../../search/queries');
 const { findIntersections } = require('../../database/streets');
-const {
-  eq,
-  like,
-  or
-} = require('../../search/query-builder');
-const squish = require('../../util/squish');
+const { containsPhrase } = require('../../search/query-builder');
 
-module.exports = async function intersectionQuery( intersection, debug = false ) {
-  const [ left, right ] = await Promise.all([
-    queryStreets({ q: roadToQuery(intersection.left) }, debug),
-    queryStreets({ q: roadToQuery(intersection.right) }, debug)
-  ]);
+module.exports = async function intersectionQuery( intersection ) {
+  const [ left, right ] = await queryStreetsParallel(
+    sreetsQuery(intersection.left),
+    sreetsQuery(intersection.right)
+  );
 
   return await processIntersection(left, right);
 }
 
-function roadToQuery( road ) {
-  return or(
-    like('nameS', squish(road)),
-    eq('name', road)
-  )
+function sreetsQuery( street ) {
+  return { q: containsPhrase('name', street) };
 }
 
 async function processIntersection( left, right ) {
