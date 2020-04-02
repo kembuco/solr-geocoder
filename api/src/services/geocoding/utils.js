@@ -34,13 +34,13 @@ function expandDirections( address ) {
 exports.expandDirections = expandDirections;
 
 /**
- * This function takes the user supplied address and the geocoded address and produces
- * a score based on the similarity of the two strings.
+ * This function takes the user supplied address and the geocoded address
+ * and produces a score based on the similarity of the two strings.
  * 
  * @param {String} oaddr User supplied address
  * @param {String} gaddr Geocoded address
  */
-function score( oaddr, gaddr ) {
+function scoreGeocode( oaddr, gaddr ) {
   const normalize = ( addr ) => {
     const tokens = addr.toLowerCase().replace(/ /g, '').split(',');
     
@@ -52,7 +52,7 @@ function score( oaddr, gaddr ) {
     normalize(gaddr)
   ) * 100).toFixed(2));
 }
-exports.score = score;
+exports.scoreGeocode = scoreGeocode;
 
 /**
  * 
