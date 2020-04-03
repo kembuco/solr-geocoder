@@ -6,18 +6,22 @@ const {
 const {
   parseAddress
 } = require('../../services/address-parsing.service');
+const {
+  forwardSchema,
+  reverseSchema
+} = require('./geocoding.schemas');
 
 module.exports = async function (fastify) {
-  fastify.get('/geocode/forward/:address', async ({ params }) => {
-    return await forwardQuery(params.address);
+  fastify.get('/geocode/forward/:address', forwardSchema(), async ({ params, query }) => {
+    return await forwardQuery(params.address, query);
   });
 
   fastify.get('/geocode/parse/:address', async ({ params }) => {
     return await parseAddress(params.address);
   });
 
-  fastify.get('/geocode/reverse/:latlon', async ({ params }) => {
-    return await reverseQuery(params.latlon);
+  fastify.get('/geocode/reverse/:point', reverseSchema(), async ({ params, query }) => {
+    return await reverseQuery(params.point, query);
   });
 
   fastify.post('/geocode/batch', async ({ body }) => {

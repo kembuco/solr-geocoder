@@ -53,23 +53,27 @@
   </fieldType>
   
   <field name="id" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
+  
+  <!-- Indexed fields used for searching -->
   <field name="address" type="address" />
   <field name="address_s" type="squished" />
   <field name="latitude" type="pdouble"/>
   <field name="longitude" type="pdouble"/>
-  <field name="latlon" type="location"/>
-  <field name="AddrNum" type="string" indexed="false" stored="true"/>
-  <field name="County" type="string" indexed="false" stored="true"/>
-  <field name="NumSuf" type="string" indexed="false" stored="true"/>
-  <field name="PlaceName" type="string" indexed="false" stored="true"/>
-  <field name="PostDir" type="string" indexed="false" stored="true"/>
-  <field name="PostType" type="string" indexed="false" stored="true"/>
-  <field name="PreDir" type="string" indexed="false" stored="true"/>
-  <field name="PreType" type="string" indexed="false" stored="true"/>
-  <field name="StreetName" type="string" indexed="false" stored="true"/>
-  <field name="UnitNumber" type="string" indexed="false" stored="true"/>
-  <field name="UnitType" type="string" indexed="false" stored="true"/>
-  <field name="Zipcode" type="string" indexed="false" stored="true"/>
+  <field name="point" type="location"/>
+
+  <!-- Stored fields used for completeness of API -->
+  <field name="address_number" type="string" indexed="false" stored="true"/>
+  <field name="address_number_suffix" type="string" indexed="false" stored="true"/>
+  <field name="street_name_pre_directional" type="string" indexed="false" stored="true"/>
+  <field name="street_name_pre_type" type="string" indexed="false" stored="true"/>
+  <field name="street_name" type="string" indexed="false" stored="true"/>
+  <field name="street_name_post_type" type="string" indexed="false" stored="true"/>
+  <field name="street_name_post_directional" type="string" indexed="false" stored="true"/>
+  <field name="occupancy_type" type="string" indexed="false" stored="true"/>
+  <field name="occupancy_identifier" type="string" indexed="false" stored="true"/>
+  <field name="place_name" type="string" indexed="false" stored="true"/>
+  <field name="zipcode" type="string" indexed="false" stored="true"/>
+  <field name="county" type="string" indexed="false" stored="true"/>
   <field name="_root_" type="string" docValues="false" indexed="true" stored="false"/>
   <field name="_version_" type="plong" indexed="false" stored="false"/>
 

@@ -53,9 +53,9 @@
   
   <field name="id" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
   <field name="name" type="name" stored="true" indexed="true" multiValued="true" />
-  <field name="nameS" type="squished" stored="true" indexed="true" multiValued="false" />
+  <field name="name_s" type="squished" stored="true" indexed="true" multiValued="false" />
   <field name="_root_" type="string" docValues="false" indexed="true" stored="false"/>
   <field name="_version_" type="plong" indexed="false" stored="false"/>
 
-  <copyField source="name" dest="nameS" />
+  <copyField source="name" dest="name_s" />
 </schema>

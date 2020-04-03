@@ -10,14 +10,13 @@ const {
 } = require('../../search/query-builder');
 const squish = require('../../util/squish');
 
-async function forwardQuery( address ) {
+async function forwardQuery( address, options ) {
   const response = await queryAddressesWaterfall(
-    beginsWithQuery(address),
-    phraseQuery(address),
-    fuzzyQuery(address)
+    toQuery(beginsWithCriteria(address), options),
+    toQuery(phraseCriteria(address), options),
+    toQuery(fuzzyCriteria(address), options)
   );
-  
-  response.oaddr = address;
+
   response.docs.forEach(( doc ) => {
     doc.score = scoreGeocode(address, doc.gaddr);
   });
@@ -26,26 +25,32 @@ async function forwardQuery( address ) {
 }
 module.exports = forwardQuery;
 
-function toQuery( q ) {
-  return { q };
+function toQuery( q, options = {} ) {
+  return {
+    q,    
+    fl: options.components ? process.env.SOLR_QUERY_ADDRESS_FL_COMPONENTS : process.env.SOLR_QUERY_ADDRESS_FL,
+    rows: process.env.SOLR_QUERY_ADDRESS_ROWS,
+    sort: process.env.SOLR_QUERY_ADDRESS_SORT,
+    debugQuery: process.env.SOLR_QUERY_DEBUG,
+  };
 }
 
 // Very fast and precise. Satisfies the "autosuggest" case
-function beginsWithQuery( address ) {
+function beginsWithCriteria( address ) {
   const simple = squish(address);
   const expanded = squish(expandDirections(address));
 
-  return toQuery(beginsWith('address_s', simple, expanded));
+  return beginsWith('address_s', simple, expanded);
 }
 
 // A bit slower, but has good accuracy on phrases
-function phraseQuery( address ) {
-  return toQuery(containsPhrase('address', address));
+function phraseCriteria( address ) {
+  return containsPhrase('address', address);
 }
 
 // A bit slower, but finds stuff the others can't
-function fuzzyQuery( address ) {
+function fuzzyCriteria( address ) {
   const tokens = address.split(/\s|,/g).filter(t => t);
 
-  return toQuery(fuzzy('address', ...tokens));
+  return fuzzy('address', ...tokens);
 }

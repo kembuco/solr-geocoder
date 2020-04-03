@@ -22,9 +22,9 @@ exports.findIntersections = async function findIntersections( leftIds, rightIds 
     const { coordinates } = JSON.parse(point);
     
     return {
-      AddrComplete: `${leftname} & ${rightname}`,
-      Latitude: coordinates[1],
-      Longitude: coordinates[0],
+      gaddr: `${leftname} & ${rightname}`,
+      lat: coordinates[1],
+      long: coordinates[0],
       score: -1
     }
   });
