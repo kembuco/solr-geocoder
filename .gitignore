@@ -1,9 +1,12 @@
 # Tool files
-node_modules
-.venv
+node_modules/
+.venv/
 yarn-error.log
 
 # Project files
 solr
 solr-*.zip
 data/**/*
+
+# Other
+.DS_Store
