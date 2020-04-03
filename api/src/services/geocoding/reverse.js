@@ -1,14 +1,16 @@
 const { queryAddresses } = require('../../search/queries');
 
-module.exports = async function reverseQuery( latlon ) {
+module.exports = async function reverseQuery( point, options ) {
+  const fields = options.components ? process.env.SOLR_QUERY_ADDRESS_FL_COMPONENTS : process.env.SOLR_QUERY_ADDRESS_FL;
+
   return await queryAddresses({
     d: process.env.SOLR_QUERY_REVERSE_RADIUS,
     q: '*:*',
-    pt: latlon,
+    pt: point,
     fq: '{!bbox}',
-    sfield: 'latlon',
+    sfield: 'point',
     sort: 'geodist() asc',
-    fl: `${process.env.SOLR_QUERY_ADDRESS_FL},dist:geodist()`,
+    fl: `${fields},dist:geodist()`,
     debugQuery: process.env.SOLR_QUERY_DEBUG
   });
 }
