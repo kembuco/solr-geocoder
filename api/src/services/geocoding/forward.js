@@ -21,7 +21,7 @@ async function forwardQuery( address, options ) {
     doc.score = scoreGeocode(address, doc.gaddr);
   });
 
-  return response
+  return response;
 }
 module.exports = forwardQuery;
 
