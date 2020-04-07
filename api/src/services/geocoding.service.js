@@ -19,7 +19,7 @@ exports.forwardQuery = async function( address, options ) {
 
   let maxScore = response.docs.reduce(( max, doc ) => Math.max(max, doc.score), 0);
 
-  if ( maxScore < 70 ) {
+  if ( maxScore < 70 || ( intersection && !response.docs.length ) ) {
     response = await arcgisQuery(address);
   }
 
