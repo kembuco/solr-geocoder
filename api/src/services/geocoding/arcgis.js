@@ -5,9 +5,9 @@ const axios = require('axios').create({
 async function findAddressCandidates( address ) {
   const { data } = await axios.get('/findAddressCandidates', {
     params: {
-      f: 'pjson',
+      f: 'json',
       countryCode: 'USA',
-      outFields: 'Subregion',
+      outFields: 'Subregion, Region',
       singleLine: address
     }
   });
@@ -19,6 +19,7 @@ async function findAddressCandidates( address ) {
       lat: location.y,
       lon: location.x,
       county: attributes.Subregion,
+      state: attributes.Region,
       score
     }))
   }
