@@ -2,7 +2,20 @@ const axios = require('axios').create({
   baseURL: process.env.AWGS_URL
 });
 
+<<<<<<< HEAD
 function processCandidates( candidates ) {
+=======
+async function findAddressCandidates( address ) {
+  const { data } = await axios.get('/findAddressCandidates', {
+    params: {
+      f: 'json',
+      countryCode: 'USA',
+      outFields: 'Subregion, Region',
+      singleLine: address
+    }
+  });
+
+>>>>>>> ee9622b... Ensuring that intersection queries resolve.
   return {
     numFound: candidates.length,
     docs: candidates.map(({ address, location, score, attributes }) => ({

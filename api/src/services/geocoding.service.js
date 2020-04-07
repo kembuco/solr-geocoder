@@ -20,7 +20,11 @@ exports.forwardQuery = async function( address, options ) {
   let maxScore = response.docs.reduce(( max, doc ) => Math.max(max, doc.score), 0);
 
   if ( maxScore < 70 && ( !intersection || !response.docs.length ) ) {
+<<<<<<< HEAD
     response = await findAddressCandidates(address);
+=======
+    response = await arcgisQuery(address);
+>>>>>>> ee9622b... Ensuring that intersection queries resolve.
   }
 
   response.oaddr = address;
