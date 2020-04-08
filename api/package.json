@@ -12,7 +12,9 @@
     "pino": "^5.17.0",
     "pino-pretty": "^3.6.1",
     "python-shell": "^1.0.8",
-    "string-similarity": "^4.0.1"
+    "string-similarity": "^4.0.1",
+    "wrr": "^1.0.0",
+    "zookeeper": "^4.5.2"
   },
   "devDependencies": {
     "eslint": "^6.8.0",

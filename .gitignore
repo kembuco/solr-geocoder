@@ -5,6 +5,7 @@ yarn-error.log
 
 # Project files
 solr
+solr-cloud
 solr-*.zip
 data/**/*
 

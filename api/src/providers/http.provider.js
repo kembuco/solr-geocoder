@@ -1,7 +1,10 @@
-const axios = require('axios').create({
-  baseURL: process.env.SOLR_URL
-});
+const { loadBalancedUrl } = require('./solr.provider');
+const axios = require('axios');
 
-exports.client = axios;
-exports.getData = ( url, opts ) => axios.get( url, opts ).then(({ data }) => data);
-exports.postData = ( url, data, opts ) => axios.post( url, data, opts ).then(({ data }) => data);
+function getClient () {
+  return axios.create({ baseURL: loadBalancedUrl() });
+}
+
+exports.getClient = getClient;
+exports.getData = ( url, opts ) => getClient().get( url, opts ).then(({ data }) => data);
+exports.postData = ( url, data, opts ) => getClient().post( url, data, opts ).then(({ data }) => data);

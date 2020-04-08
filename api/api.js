@@ -6,11 +6,13 @@ const fastify = require('fastify')({
     level: process.env.LOG_LEVEL
   }
 });
+const { init } = require('./src/providers/solr.provider');
 
 fastify.register(require('./src/routes/v1/geocoding.routes'), { prefix: 'v1' });
 
 const start = async () => {
   try {
+    await init();
     await fastify.listen(3005);
   } catch (err) {
     fastify.log.error(err);
