@@ -87,7 +87,7 @@ function loadBalancedUrl() {
   if ( initialized ) {
     host = selectHost();
   } else {
-    logger.error('ZooKeeper has not been initialized. Returning default Solr URL');    
+    logger.info(`ZooKeeper has not been initialized. Using default Solr host (${host})`);    
   }
 
   return `${protocol}://${host}${path}`;
