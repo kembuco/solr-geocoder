@@ -1,18 +1,29 @@
 /* eslint-disable no-async-promise-executor */
 const { getData } = require('../providers/http.provider');
+const logger = require('../providers/logging.provider');
 
-async function queryStreets( params ) {
-  const { response } = await getData('/streets/select', { 
-    params: {
-      fl: process.env.SOLR_QUERY_STREETS_FL,
-      sort: process.env.SOLR_QUERY_STREETS_SORT,
-      rows: process.env.SOLR_QUERY_STREETS_ROWS,
-      debugQuery: process.env.SOLR_QUERY_DEBUG,
-      ...params
+async function queryStreets( params, retry = 0 ) { 
+  try {
+    const { response } = await getData('/streets/select', {
+      params: {
+        fl: process.env.SOLR_QUERY_STREETS_FL,
+        sort: process.env.SOLR_QUERY_STREETS_SORT,
+        rows: process.env.SOLR_QUERY_STREETS_ROWS,
+        debugQuery: process.env.SOLR_QUERY_DEBUG,
+        ...params
+      }
+    });
+
+    return response;
+  } catch ( e ) {
+    logger.error(`${e}\n${JSON.stringify(params)}`);
+
+    if ( retry <= 3 ) {
+      return queryAddresses( params, retry + 1 );
     }
-  });
 
-  return response;
+    return { numFound: 0, docs: [] };
+  }
 }
 exports.queryStreets = queryStreets;
 
@@ -43,18 +54,28 @@ function queryStreetsParallel( ...paramsList ) {
 }
 exports.queryStreetsParallel = queryStreetsParallel;
 
-async function queryAddresses( params ) {
-  const { response } = await getData('/addresses/select', { 
-    params: {
-      fl: process.env.SOLR_QUERY_ADDRESS_FL,
-      rows: process.env.SOLR_QUERY_ADDRESS_ROWS,
-      sort: process.env.SOLR_QUERY_ADDRESS_SORT,
-      debugQuery: process.env.SOLR_QUERY_DEBUG,
-      ...params
-    }
-  });
+async function queryAddresses( params, retry = 0 ) {
+  try {
+    const { response } = await getData('/addresses/select', { 
+      params: {
+        fl: process.env.SOLR_QUERY_ADDRESS_FL,
+        rows: process.env.SOLR_QUERY_ADDRESS_ROWS,
+        sort: process.env.SOLR_QUERY_ADDRESS_SORT,
+        debugQuery: process.env.SOLR_QUERY_DEBUG,
+        ...params
+      }
+    });
 
-  return response;
+    return response;
+  } catch ( e ) {
+    logger.error(`${e}\n${JSON.stringify(params)}`);
+
+    if ( retry <= 3 ) {
+      return queryAddresses( params, retry + 1 );
+    }
+
+    return { numFound: 0, docs: [] };
+  }
 }
 exports.queryAddresses = queryAddresses;
 
