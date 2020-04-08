@@ -1,6 +1,20 @@
 const axios = require('axios').create({
-  baseURL: 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer'
+  baseURL: process.env.AWGS_URL
 });
+
+function processCandidates( candidates ) {
+  return {
+    numFound: candidates.length,
+    docs: candidates.map(({ address, location, score, attributes }) => ({
+      gaddr: address,
+      lat: location.y,
+      lon: location.x,
+      county: attributes.Subregion,
+      state: attributes.Region,
+      score
+    }))
+  }
+}
 
 async function findAddressCandidates( address ) {
   const { data } = await axios.get('/findAddressCandidates', {
@@ -12,16 +26,29 @@ async function findAddressCandidates( address ) {
     }
   });
 
-  return {
-    numFound: data.candidates.length,
-    docs: data.candidates.map(({ address, location, score, attributes }) => ({
-      gaddr: address,
-      lat: location.y,
-      lon: location.x,
-      county: attributes.Subregion,
-      state: attributes.Region,
-      score
-    }))
-  }
+  return processCandidates(data.candidates);
 }
-module.exports = findAddressCandidates;
+exports.findAddressCandidates = findAddressCandidates;
+
+async function reverseGeocode( latitude, longitude ) {
+  const { data } = await axios.get('/reverseGeocode', {
+    params: {
+      f: 'json',
+      countryCode: 'USA',
+      outFields: 'Subregion, Region',
+      location: `${longitude},${latitude}`
+    }
+  });
+  const { address = {}, location = {} } = data;
+
+  return processCandidates([{
+    location,
+    score: 100,
+    address: address.Match_addr,
+    attributes: {
+      Subregion: address.Subregion,
+      Region: address.Region
+    }
+  }]);
+}
+exports.reverseGeocode = reverseGeocode;

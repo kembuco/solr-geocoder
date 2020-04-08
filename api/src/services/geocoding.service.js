@@ -1,6 +1,6 @@
 const forwardQuery = require('./geocoding/forward');
 const intersectionQuery = require('./geocoding/intersection');
-const arcgisQuery = require('./geocoding/arcgis')
+const { findAddressCandidates } = require('./geocoding/arcgis')
 const { 
   cleanAddress,
   parseIntersection
@@ -20,7 +20,7 @@ exports.forwardQuery = async function( address, options ) {
   let maxScore = response.docs.reduce(( max, doc ) => Math.max(max, doc.score), 0);
 
   if ( maxScore < 70 && ( !intersection || !response.docs.length ) ) {
-    response = await arcgisQuery(address);
+    response = await findAddressCandidates(address);
   }
 
   response.oaddr = address;
