@@ -21,10 +21,14 @@ exports.forwardQuery = async function( address, options ) {
 
   if ( maxScore < 70 && ( !intersection || !response.docs.length ) ) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     response = await findAddressCandidates(address);
 =======
     response = await arcgisQuery(address);
 >>>>>>> ee9622b... Ensuring that intersection queries resolve.
+=======
+    response = await findAddressCandidates(address);
+>>>>>>> f6396a9... Backup Plan A - proxy all calls to ArcGIS World Geocoding Service.
   }
 
   response.oaddr = address;

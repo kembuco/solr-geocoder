@@ -3,8 +3,25 @@ const axios = require('axios').create({
 });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 function processCandidates( candidates ) {
 =======
+=======
+function processCandidates( candidates ) {
+  return {
+    numFound: candidates.length,
+    docs: candidates.map(({ address, location, score, attributes }) => ({
+      gaddr: address,
+      lat: location.y,
+      lon: location.x,
+      county: attributes.Subregion,
+      state: attributes.Region,
+      score
+    }))
+  }
+}
+
+>>>>>>> f6396a9... Backup Plan A - proxy all calls to ArcGIS World Geocoding Service.
 async function findAddressCandidates( address ) {
   const { data } = await axios.get('/findAddressCandidates', {
     params: {
@@ -15,6 +32,7 @@ async function findAddressCandidates( address ) {
     }
   });
 
+<<<<<<< HEAD
 >>>>>>> ee9622b... Ensuring that intersection queries resolve.
   return {
     numFound: candidates.length,
@@ -65,3 +83,31 @@ async function reverseGeocode( latitude, longitude ) {
   }]);
 }
 exports.reverseGeocode = reverseGeocode;
+=======
+  return processCandidates(data.candidates);
+}
+exports.findAddressCandidates = findAddressCandidates;
+
+async function reverseGeocode( latitude, longitude ) {
+  const { data } = await axios.get('/reverseGeocode', {
+    params: {
+      f: 'json',
+      countryCode: 'USA',
+      outFields: 'Subregion, Region',
+      location: `${longitude},${latitude}`
+    }
+  });
+  const { address = {}, location = {} } = data;
+
+  return processCandidates([{
+    location,
+    score: 100,
+    address: address.Match_addr,
+    attributes: {
+      Subregion: address.Subregion,
+      Region: address.Region
+    }
+  }]);
+}
+exports.reverseGeocode = reverseGeocode;
+>>>>>>> f6396a9... Backup Plan A - proxy all calls to ArcGIS World Geocoding Service.

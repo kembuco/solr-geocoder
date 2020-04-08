@@ -12,7 +12,10 @@ fastify.register(require('./src/routes/v1/geocoding.routes'), { prefix: 'v1' });
 
 const start = async () => {
   try {
+<<<<<<< HEAD
     await init();
+=======
+>>>>>>> f6396a9... Backup Plan A - proxy all calls to ArcGIS World Geocoding Service.
     await fastify.listen(process.env.API_PORT);
   } catch (err) {
     fastify.log.error(err);
