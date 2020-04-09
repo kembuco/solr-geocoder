@@ -9,6 +9,9 @@ solr-cloud
 solr-*.zip
 zookeeper/
 data/**/*
+data/address/*
+data/streets/*
+!data/**/.gitkeep
 
 # Other
 .DS_Store
