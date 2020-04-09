@@ -4,7 +4,7 @@ node_modules/
 yarn-error.log
 
 # Project files
-solr
+/solr/
 solr-cloud
 solr-*.zip
 zookeeper/
