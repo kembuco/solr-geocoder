@@ -13,7 +13,7 @@ fastify.register(require('./src/routes/v1/geocoding.routes'), { prefix: 'v1' });
 const start = async () => {
   try {
     await init();
-    await fastify.listen('0.0.0.0', process.env.API_PORT);
+    await fastify.listen(process.env.API_PORT, '0.0.0.0');
   } catch (err) {
     fastify.log.error(err);
 
