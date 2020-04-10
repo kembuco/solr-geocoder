@@ -1,13 +1,13 @@
 -- STEP 1 - Get rid of no names
 delete
-from streets 
+from street
 where 
     name is null 
     and ref is null;
 
 -- STEP 2 - Get rid of tiny streets
 delete
-from streets
+from street
 where fclass not in (
     'motorway',
     'trunk',
@@ -22,11 +22,11 @@ where fclass not in (
     'trunk_link',
     'primary_link',
     'secondary_link'
-)
+);
 
 -- STEP 3 - Set name field to ref value if name is null
-update streets set name = regexp_replace(ref, ';.*$', '') where name is null;
-update streets set name = regexp_replace(ref, ';.*$', '') where name like '%;%' and ref = name;
+update street set name = regexp_replace(ref, ';.*$', '') where name is null;
+update street set name = regexp_replace(ref, ';.*$', '') where name like '%;%' and ref = name;
 
 -- STEP 4 - Find an intersection
 -- select

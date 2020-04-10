@@ -5,6 +5,7 @@
 **/yarn-error.log
 
 # Project files
+zookeeper/
 solr/
 **/solr-cloud
 **/solr-*.zip

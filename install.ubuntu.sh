@@ -43,13 +43,13 @@ cat <<EOT >> zookeeper/conf/zoo.cfg
 tickTime=2000
 initLimit=5
 syncLimit=2
-dataDir=/opt/solr-geocoder/zookeeper/data
+dataDir=$PWD/zookeeper/data
 clientPort=2181
 4lw.commands.whitelist=mntr,conf,ruok
 EOT
 
 cat <<EOT >> zookeeper/conf/zookeeper-env.sh
-ZOO_LOG_DIR="/opt/solr-geocoder/zookeeper/logs"
+ZOO_LOG_DIR="$PWD/zookeeper/logs"
 ZOO_LOG4J_PROP="INFO,ROLLINGFILE"
 SERVER_JVMFLAGS="-Xms2048m -Xmx2048m"
 EOT

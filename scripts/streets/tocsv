@@ -1,5 +1,7 @@
 # TODO: move to js and get rid of absolute urls
 scripts_dir=$(dirname $(dirname $(realpath $0)))
 data_dir="$(dirname $scripts_dir)/data"
+
 . "$scripts_dir/pg_connect"
+psql -f "$(dirname $(realpath $0))/cleanup.sql"
 psql -c "\copy (SELECT gid, name FROM street WHERE name IS NOT NULL) to '$data_dir/streets/streets.csv' with csv"

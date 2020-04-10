@@ -1,5 +1,6 @@
 # TODO: move to js and get rid of absolute urls
 scripts_dir=$(dirname $(dirname $(realpath $0)))
 data_dir="$(dirname $scripts_dir)/data"
+
 . "$scripts_dir/pg_connect"
 shp2pgsql -d -I -g geometry -s 4326 "$data_dir/streets/gis_osm_roads_free_1" street | psql
