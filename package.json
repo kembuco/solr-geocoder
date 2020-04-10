@@ -7,5 +7,13 @@
     "fs-extra": "^8.1.0",
     "ora": "^4.0.3",
     "unzipper": "^0.10.10"
+  },
+  "devDependencies": {
+    "pm2": "^4.2.3"
+  },
+  "scripts": {
+    "api:start": "pm2 start api/api.js --name geocoder-api -i max",
+    "api:reload": "pm2 reload geocoder-api",
+    "api:logs": "pm2 logs --lines 200 geocoder-api"
   }
 }

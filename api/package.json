@@ -18,9 +18,14 @@
   },
   "devDependencies": {
     "eslint": "^6.8.0",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "pm2": "^4.2.3"
   },
   "scripts": {
-    "dev:api": "nodemon api.js"
+    "api:dev": "nodemon api.js",
+    "api:start": "pm2 start api.js --name geocoder-api -i max",
+    "api:stop": "pm2 stop geocoder-api",
+    "api:reload": "pm2 reload geocoder-api",
+    "api:logs": "pm2 logs --lines 200 geocoder-api"
   }
 }

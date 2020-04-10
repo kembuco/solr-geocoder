@@ -1,0 +1,17 @@
+.git/
+# Tool files
+**/node_modules/
+**/.venv/
+**/yarn-error.log
+
+# Project files
+solr/
+**/solr-cloud
+**/solr-*.zip
+**/data/address/*
+**/data/streets/*
+!**/data/**/.gitkeep
+
+# Other
+**/.DS_Store
+**/.env

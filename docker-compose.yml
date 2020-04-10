@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  api:    
+    build:
+      context: .
+      dockerfile: Dockerfile
+    
+    ports: 
+      - 3500:3005
+      - 8900:8983
+      
+    command: sleep infinity
+
+    links:
+      - database
+
+  database:
+    image: postgis/postgis
+    restart: unless-stopped
+    ports: 
+      - 5555:5432
+    environment:
+      POSTGRES_DB: geocoder
+      POSTGRES_USER: geocoder
+      POSTGRES_PASSWORD: password

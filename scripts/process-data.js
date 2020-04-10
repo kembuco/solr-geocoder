@@ -10,7 +10,7 @@ const time = Date.now();
 
 module.exports = async function processData({ infile, outfilesPattern }) {
   const outPath = path.dirname(infile);
-  const perFile = +process.env.DATA_RECORDS_PER_FILE;
+  const perFile = +process.env.DATA_RECORDS_PER_FILE || 300000;
   let counter = 0;
   let spinner;
   let writer;
