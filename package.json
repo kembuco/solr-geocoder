@@ -5,6 +5,7 @@
     "commander": "^5.0.0",
     "dotenv": "^8.2.0",
     "fs-extra": "^8.1.0",
+    "node-postal": "kembuco/node-postal",
     "ora": "^4.0.3",
     "unzipper": "^0.10.10"
   },
@@ -14,7 +15,7 @@
   "scripts": {
     "dev": "./start.sh && yarn api:dev",
     "api:dev": "cd api && yarn api:dev",
-    "api:start": "pm2 start api/api.js --name geocoder-api -i max",
+    "api:start": "pm2 start geocoder/geocoder-api.js --name geocoder-api -i max",
     "api:reload": "pm2 reload geocoder-api",
     "api:logs": "pm2 logs --lines 200 geocoder-api"
   }

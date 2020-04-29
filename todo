@@ -1,0 +1,26 @@
+Geocoding Workflow:
+  /suggest:
+    ☐ Expanded address begins with
+    ☐ Unexpanded address begins with
+  /forward:
+    ☐ Find matches based on intersection query
+    ☐ Find exact matches based on supplied components
+    ☐ Find matches loosely based on supplied components with ?exact=false
+    ☐ Call geocod.io for any addresses we don't have to augment our database (does this belong in geocoder or in tax code?)
+    ☐ Return all components for address with ?fields=*
+    ☐ Return score based on exact house_number, exact zipcode, and Jaro-Winkler distance of street
+  /batch:
+    ☐ Find matches for a list of address; ideally by looping over /forward calls
+  /reverse:
+    ☐ Return address within configured radius of supplied lat,lon point
+    ☐ Return address witing supplied radius of supplied lat,lon point with ?radius=<number in km>
+    ☐ Return score based on difference
+
+API:
+☐ Can we merge in the cascade branch? It definitely needs some cleanup.
+☐ Can we bring in geocod.io? It'd be nice to augment our address database.
+
+Parsing:
+☐ Parsing/Expansion as it's own API? (libpostal)
+☐ Using postal-async?
+☐ Improving performance of usaddress parser? Is its accuracy necessary?
