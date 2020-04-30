@@ -1,24 +1,9 @@
-const service = require('axios').create({
-  baseURL: `${process.env.PARSING_BASE_URL}/v1`
-});
+let implementation;
 
-async function isAvailable() {
-  try {
-    const { data: { status } } = await service.get('/status');
-    
-    return status === 'ok';
-  } catch ( e ) {
-    return false;
-  }
+if ( ( process.env.PARSING_USE_LOCAL || 'false' ).toLowerCase() === 'true' ) {
+  implementation = require('./parsing/parsing.local');
+} else {
+  implementation = require('./parsing/parsing.remote');
 }
-exports.isAvailable = isAvailable;
 
-async function expand( address ) {
-  return service.get(`/v1/expand/${address}`);
-}
-exports.expand = expand;
-
-async function parse( address ) {
-  return service.get(`/v1/parse/${address}`);
-}
-exports.parse = parse;
+module.exports = implementation;

@@ -8,6 +8,7 @@
     "dotenv": "^8.2.0",
     "fastify": "^2.12.1",
     "fluent-schema": "^0.10.0",
+    "node-postal": "kembuco/node-postal",
     "pg": "^7.18.2",
     "pino": "^5.17.0",
     "pino-pretty": "^3.6.1",
@@ -22,10 +23,11 @@
     "pm2": "^4.2.3"
   },
   "scripts": {
-    "api:dev": "nodemon api.js",
-    "api:start": "pm2 start api.js --name geocoder-api -i max",
-    "api:stop": "pm2 stop geocoder-api",
-    "api:reload": "pm2 reload geocoder-api",
-    "api:logs": "pm2 logs --lines 200 geocoder-api"
+    "parser:dev": "nodemon parser-api.js -w 'parser-api.js' -w 'src/**/parsing.*.js'",
+    "geocoder:dev": "nodemon geocoder-api.js -i 'parser-api.js' -i 'src/**/parsing.*.js'",
+    "geocoder:start": "pm2 start api.js --name geocoder-api -i max",
+    "geocoder:stop": "pm2 stop geocoder-api",
+    "geocoder:reload": "pm2 reload geocoder-api",
+    "geocoder:logs": "pm2 logs --lines 200 geocoder-api"
   }
 }

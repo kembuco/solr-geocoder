@@ -11,7 +11,7 @@ fastify.register(require('./src/routes/v1/parsing.routes'), { prefix: 'v1' });
 
 const start = async () => {
   try {
-    await fastify.listen(process.env.API_PORT, '0.0.0.0');
+    await fastify.listen(process.env.PARSING_API_PORT, '0.0.0.0');
   } catch (err) {
     fastify.log.error(err);
 
