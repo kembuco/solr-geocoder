@@ -71,3 +71,8 @@ function parseIntersection( address ) {
   return left && right && { left, right };
 }
 exports.parseIntersection = parseIntersection;
+
+function escapeWhitespace( address ) {
+  return address.replace(/\s/g, '\\ ');
+}
+exports.escapeWhitespace = escapeWhitespace;

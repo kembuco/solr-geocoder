@@ -28,6 +28,8 @@ exports.forwardQuery = async function( address, options ) {
   return response;
 }
 
+exports.suggestQuery = require('./geocoding/suggest');
+
 // TODO: Add oaddr to reverse query and clean addresses
 exports.reverseQuery = require('./geocoding/reverse');
 // TODO: clean addresses

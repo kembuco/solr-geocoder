@@ -80,6 +80,23 @@ async function queryAddresses( params, retry = 0 ) {
 exports.queryAddresses = queryAddresses;
 
 /**
+ * This function will return an object which will be turned into a querystring to send to Solr for addresses.
+ * 
+ * @param {String} q Query criteria to send to Solr
+ * @param {Object} options Object of options to help shape the query
+ */
+function toAddressQuery( q, options = {} ) {
+  return {
+    q,    
+    fl: options.components ? process.env.SOLR_QUERY_ADDRESS_FL_COMPONENTS : process.env.SOLR_QUERY_ADDRESS_FL,
+    rows: process.env.SOLR_QUERY_ADDRESS_ROWS,
+    sort: process.env.SOLR_QUERY_ADDRESS_SORT,
+    debugQuery: process.env.SOLR_QUERY_DEBUG,
+  };
+}
+exports.toAddressQuery = toAddressQuery;
+
+/**
  * This function takes a list of params maps and runs them sequentially as
  * queryAddresses calls. When it gets a response from one of the calls it stops
  * processing and returns the response.

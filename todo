@@ -1,11 +1,11 @@
 Geocoding Workflow:
   /parse:
-    ☐ Parse address
+    ✔ Parse address @done(20-04-30 10:04)
   /expand:
-    ☐ Expand address
+    ✔ Expand address @done(20-04-30 10:04)
   /suggest:
-    ☐ Expanded address begins with
-    ☐ Unexpanded address begins with
+    ✔ Expanded address begins with @done(20-04-30 13:34)
+    ✔ Unexpanded address begins with @done(20-04-30 13:34)
   /forward:
     ☐ Find matches based on intersection query
     ☐ Find exact matches based on supplied components

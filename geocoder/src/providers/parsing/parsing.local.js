@@ -9,7 +9,7 @@ async function isAvailable() {
 exports.isAvailable = isAvailable;
 
 function expand( address ) {
-  return expandAddress(address);
+  return [ address, ...expandAddress(address) ];
 }
 exports.expand = expand;
 
