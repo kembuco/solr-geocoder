@@ -14,7 +14,7 @@ function roundRobin( candidates = []) {
     if ( index == pool.length - 1 ) {
       index = 0;
     } else {
-      index = index +1;
+      index += 1;
     }
 
     return pool[index];
