@@ -43,12 +43,10 @@
     </analyzer>
   </fieldType>
 
-  <fieldType name="squished" class="solr.TextField" sortMissingLast="true">
+  <fieldType name="string_lower" class="solr.TextField" sortMissingLast="true">
     <analyzer>
       <tokenizer class="solr.KeywordTokenizerFactory"/>
       <filter class="solr.LowerCaseFilterFactory"/>
-      <filter class="solr.TrimFilterFactory"/>
-      <filter class="solr.PatternReplaceFilterFactory" pattern="(\s|-|,|'|#)" replacement="" replace="all" />
     </analyzer>
   </fieldType>
   
@@ -56,7 +54,7 @@
   
   <!-- Indexed fields used for searching -->
   <field name="address" type="address" />
-  <field name="address_s" type="squished" />
+  <field name="address_s" type="string_lower" />
   <field name="latitude" type="pdouble"/>
   <field name="longitude" type="pdouble"/>
   <field name="point" type="location"/>
