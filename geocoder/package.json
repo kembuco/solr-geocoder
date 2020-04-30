@@ -24,7 +24,7 @@
   },
   "scripts": {
     "parser:dev": "nodemon parser-api.js -w 'parser-api.js' -w 'src/**/parsing.*.js'",
-    "geocoder:dev": "nodemon geocoder-api.js -i 'parser-api.js' -i 'src/**/parsing.*.js'",
+    "geocoder:dev": "nodemon geocoder-api.js -i 'parser-api.js'",
     "geocoder:start": "pm2 start api.js --name geocoder-api -i max",
     "geocoder:stop": "pm2 stop geocoder-api",
     "geocoder:reload": "pm2 reload geocoder-api",
