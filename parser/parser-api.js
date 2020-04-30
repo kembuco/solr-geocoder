@@ -7,6 +7,7 @@ const fastify = require('fastify')({
   }
 });
 
+fastify.get('/', async () => ({ status: 'ok' }));
 fastify.register(require('./src/routes/v1/parsing.routes'), { prefix: 'v1' });
 
 const start = async () => {

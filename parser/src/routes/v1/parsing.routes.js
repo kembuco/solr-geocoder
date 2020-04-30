@@ -1,4 +1,7 @@
-const { expand: { expandAddress }, parser: { parseAddress } } = require('node-postal');
+const {
+  expand: { expandAddress },
+  parser: { parseAddress }
+} = require('node-postal');
 
 module.exports = async function ( fastify ) {
   fastify.get('/expand/:address', async ({ params: { address } }) => {
@@ -14,4 +17,4 @@ module.exports = async function ( fastify ) {
       return result;
     }, {});
   });
-}
+};
