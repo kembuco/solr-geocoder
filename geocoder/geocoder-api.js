@@ -10,13 +10,14 @@ const { isAvailable } = require('./src/providers/parsing.provider');
 const { init } = require('./src/providers/solr.provider');
 
 fastify.register(require('./src/routes/v1/geocoding.routes'), { prefix: 'v1' });
+fastify.register(require('./src/routes/v1/parsing.routes'), { prefix: 'v1' });
 
 const start = async () => {
   try {
     const available = await isAvailable();
 
     if ( !available ) {
-      fastify.log.error(`Parsing service is not available at ${process.env.PARSING_BASE_URL}. Functionality will be degraded.`);
+      fastify.log.error(`Parsing service is not available at ${process.env.PARSING_REMOTE_URL}. Functionality will be degraded.`);
     }
 
     await init();

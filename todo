@@ -1,4 +1,8 @@
 Geocoding Workflow:
+  /parse:
+    ☐ Parse address
+  /expand:
+    ☐ Expand address
   /suggest:
     ☐ Expanded address begins with
     ☐ Unexpanded address begins with
@@ -21,6 +25,6 @@ API:
 ☐ Can we bring in geocod.io? It'd be nice to augment our address database.
 
 Parsing:
-☐ Parsing/Expansion as it's own API? (libpostal)
+✔ Parsing/Expansion as it's own API? (libpostal) @done(20-04-30 08:57)
 ☐ Using postal-async?
 ☐ Improving performance of usaddress parser? Is its accuracy necessary?

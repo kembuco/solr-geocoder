@@ -1,5 +1,5 @@
 const service = require('axios').create({
-  baseURL: `${process.env.PARSING_BASE_URL}/v1`
+  baseURL: `${process.env.PARSING_REMOTE_URL}/v1`
 });
 
 async function isAvailable() {
@@ -13,12 +13,18 @@ async function isAvailable() {
 }
 exports.isAvailable = isAvailable;
 
-async function expand( address ) {
-  return service.get(`/v1/expand/${address}`);
+async function get( path ) {
+  const { data } = await service.get(path);
+
+  return data;
+}
+
+function expand( address ) {
+  return get(`/expand/${address}`);
 }
 exports.expand = expand;
 
-async function parse( address ) {
-  return service.get(`/v1/parse/${address}`);
+function parse( address ) {
+  return get(`/parse/${address}`);
 }
 exports.parse = parse;
