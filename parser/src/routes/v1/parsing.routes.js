@@ -4,6 +4,8 @@ const {
 } = require('node-postal');
 
 module.exports = async function ( fastify ) {
+  fastify.get('/status', async () => ({ status: 'ok' }));
+
   fastify.get('/expand/:address', async ({ params: { address } }) => {
     return await expandAddress(address);
   });
