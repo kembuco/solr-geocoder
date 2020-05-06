@@ -20,11 +20,11 @@ async function get( path ) {
 }
 
 function expand( address ) {
-  return get(`/expand/${address}`);
+  return get(`/expand/${encodeURIComponent(address)}`);
 }
 exports.expand = expand;
 
 function parse( address ) {
-  return get(`/parse/${address}`);
+  return get(`/parse/${encodeURIComponent(address)}`);
 }
 exports.parse = parse;
