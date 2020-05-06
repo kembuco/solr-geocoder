@@ -5,7 +5,7 @@ module.exports = async function reverseQuery( point, options ) {
   const fields = options.fields ? `${addressFields},${options.fields}` : addressFields;
 
   return await queryAddresses({
-    d: process.env.SOLR_QUERY_REVERSE_RADIUS,
+    d: options.radius || process.env.SOLR_QUERY_REVERSE_RADIUS,
     q: '*:*',
     pt: point,
     fq: '{!bbox}',

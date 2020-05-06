@@ -16,12 +16,12 @@ Geocoding Workflow:
   /batch:
     ☐ Find matches for a list of address; ideally by looping over /forward calls
   /reverse:
-    ☐ Return address within configured radius of supplied lat,lon point
-    ☐ Return address witing supplied radius of supplied lat,lon point with ?radius=<number in km>
-    ☐ Return score based on difference
+    ✔ Return address within configured radius of supplied lat,lon point @done(20-05-06 14:33)
+    ✔ Return address witing supplied radius of supplied lat,lon point with ?radius=<number in km> @done(20-05-06 14:33)
+    ☐ Return score based on distance
 
 API:
-☐ Can we merge in the cascade branch? It definitely needs some cleanup.
+✔ Can we merge in the cascade branch? It definitely needs some cleanup. @done(20-05-06 14:05)
 ☐ Can we bring in geocod.io? It'd be nice to augment our address database.
 
 Parsing:

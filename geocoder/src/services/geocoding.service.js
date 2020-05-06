@@ -32,5 +32,6 @@ exports.suggestQuery = require('./geocoding/suggest');
 
 // TODO: Add oaddr to reverse query and clean addresses
 exports.reverseQuery = require('./geocoding/reverse');
+
 // TODO: clean addresses
 exports.batchQuery = require('./geocoding/batch');
