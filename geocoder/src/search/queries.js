@@ -86,9 +86,11 @@ exports.queryAddresses = queryAddresses;
  * @param {Object} options Object of options to help shape the query
  */
 function toAddressQuery( q, options = {} ) {
+  const fields = process.env.SOLR_QUERY_ADDRESS_FL;
+
   return {
     q,    
-    fl: options.components ? process.env.SOLR_QUERY_ADDRESS_FL_COMPONENTS : process.env.SOLR_QUERY_ADDRESS_FL,
+    fl: options.fields ? `${fields},${options.fields}` : fields,
     rows: process.env.SOLR_QUERY_ADDRESS_ROWS,
     sort: process.env.SOLR_QUERY_ADDRESS_SORT,
     debugQuery: process.env.SOLR_QUERY_DEBUG,

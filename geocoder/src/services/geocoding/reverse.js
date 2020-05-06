@@ -1,7 +1,8 @@
 const { queryAddresses } = require('../../search/queries');
 
 module.exports = async function reverseQuery( point, options ) {
-  const fields = options.components ? process.env.SOLR_QUERY_ADDRESS_FL_COMPONENTS : process.env.SOLR_QUERY_ADDRESS_FL;
+  const addressFields = process.env.SOLR_QUERY_ADDRESS_FL;
+  const fields = options.fields ? `${addressFields},${options.fields}` : addressFields;
 
   return await queryAddresses({
     d: process.env.SOLR_QUERY_REVERSE_RADIUS,
