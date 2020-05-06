@@ -5,7 +5,7 @@ const {
 } = require('fluent-schema');
 
 function forwardSchema() {
-  const query = object().prop('components', boolean());
+  const query = object().prop('components', boolean()).prop('broaden', boolean());
   const params = object().prop('address', string().required().minLength(1));
   
   return schema(query, params);

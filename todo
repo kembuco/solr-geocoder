@@ -7,9 +7,9 @@ Geocoding Workflow:
     ✔ Expanded address begins with @done(20-04-30 13:34)
     ✔ Unexpanded address begins with @done(20-04-30 13:34)
   /forward:
-    ☐ Find matches based on intersection query
-    ☐ Find exact matches based on supplied components
-    ☐ Find matches loosely based on supplied components with ?exact=false
+    ✔ Find matches based on intersection query @done(20-05-06 10:25)
+    ✔ Find exact matches based on supplied components @done(20-05-06 12:57)
+    ✔ Find matches loosely based on supplied components with ?broaden=true @done(20-05-06 12:57)
     ☐ Call geocod.io for any addresses we don't have to augment our database (does this belong in geocoder or in tax code?)
     ☐ Return all components for address with ?fields=*
     ☐ Return score based on exact house_number, exact zipcode, and Jaro-Winkler distance of street

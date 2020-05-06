@@ -120,9 +120,10 @@ module.exports = async function processData({ infile, outfilesPattern }) {
       ] = fields;
       const address = `${AddrNum}${NumSuf}${PreDir}${PreType}${StreetName}${PostType}${PostDir}${UnitType}${UnitNumber}${PlaceName}${Zipcode}`;
     
-      // Create a LatLon, AddrComplete fields
+      // Create LatLon, AddrComplete, Street fields
       fields.push([Latitude, Longitude].filter(Boolean).join(','));
       fields.push([AddrFull, PlaceName, 'CO', Zipcode].filter(Boolean).join(', '));
+      fields.push([PreDir, PreType, StreetName, PostType, PostDir].filter(Boolean).join(' '));
     
       if ( !seen[address] ) {
         seen[address] = 1;

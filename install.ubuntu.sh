@@ -73,7 +73,7 @@ solr/bin/post -c streets -params "fieldnames=id,name&commitWithin=10000" data/st
 
 cd data/address && wget http://kembuco.com/geocoder/AllAddresses.csv && cd ../..
 ./solr-geocoder process-data -i data/address/AllAddresses.csv -o addresses-{index}.csv && rm -f data/address/AllAddresses.csv
-solr/bin/post -c addresses -params "fieldnames=id,longitude,latitude,address_number,address_number_suffix,street_name_pre_directional,street_name_pre_type,street_name,street_name_post_type,street_name_post_directional,occupancy_type,occupancy_identifier,AddrFull,place_name,zipcode,county,point,address&skip=AddrFull" data/address/addresses-*.csv
+solr/bin/post -c addresses -params "fieldnames=id,longitude,latitude,address_number,address_number_suffix,street_name_pre_directional,street_name_pre_type,street_name,street_name_post_type,street_name_post_directional,occupancy_type,occupancy_identifier,AddrFull,place_name,zipcode,county,point,address,street&skip=AddrFull" data/address/addresses-*.csv
 
 # Shut down Solr && zookeeper
 solr/bin/solr stop -all

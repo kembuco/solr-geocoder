@@ -58,6 +58,7 @@
   <field name="latitude" type="pdouble"/>
   <field name="longitude" type="pdouble"/>
   <field name="point" type="location"/>
+  <field name="street" type="address" />
 
   <!-- Stored fields used for completeness of API -->
   <field name="address_number" type="string" indexed="false" stored="true"/>
