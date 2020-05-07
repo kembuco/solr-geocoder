@@ -6,7 +6,10 @@ const { escapeWhitespace } = require('./utils');
 async function suggest( address, options ) {
   const expansions = await expand(address);
   const criteria = beginsWith('address_s', ...expansions.map(escapeWhitespace));
+  const response = await queryAddresses(toAddressQuery(criteria, options));
 
-  return queryAddresses(toAddressQuery(criteria, options));
+  response.oaddr = address;
+
+  return response;
 }
 module.exports = suggest;
