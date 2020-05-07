@@ -18,7 +18,7 @@ Geocoding Workflow:
   /reverse:
     ✔ Return address within configured radius of supplied lat,lon point @done(20-05-06 14:33)
     ✔ Return address witing supplied radius of supplied lat,lon point with ?radius=<number in km> @done(20-05-06 14:33)
-    ☐ Return score based on distance
+    ✔ Return score based on distance @done(20-05-06 16:30)
 
 API:
 ✔ Can we merge in the cascade branch? It definitely needs some cleanup. @done(20-05-06 14:05)
@@ -26,5 +26,7 @@ API:
 
 Parsing:
 ✔ Parsing/Expansion as it's own API? (libpostal) @done(20-04-30 08:57)
-☐ Using postal-async?
-☐ Improving performance of usaddress parser? Is its accuracy necessary?
+✔ Using postal-async? @done(20-05-07 08:35)
+  - No. The problem is that you still have to wait for the parser to be ready to do anything.
+✔ Improving performance of usaddress parser? Is its accuracy necessary? @done(20-05-07 08:36)
+  - Not a goal at this time. 

@@ -7,18 +7,21 @@ const {
 } = require('../../search/query-builder');
 const { parse: parseAddress } = require('../../providers/parsing.provider');
 
-async function forwardQuery( address, options ) {
-  let response;
+async function forwardQuery( address, options = {} ) {
+  const addressQuery = options.broaden ? broadForwardQuery : narrowForwardQuery;
+  const response = await addressQuery(address, options);
+  
+  // Score all the found addresses
+  await Promise.all(
+    response.docs.map(async ( doc ) => {
+      doc.score = await scoreGeocode(address, doc.gaddr);
 
-  if ( options.broaden ) {
-    response = await broadForwardQuery(address, options);
-  } else  {
-    response = await narrowForwardQuery(address, options);
-  }
+      return doc.score;
+    })
+  );
 
-  response.docs.forEach(( doc ) => {
-    doc.score = scoreGeocode(address, doc.gaddr);
-  });
+  // Remove all addresses with scores less than threshold
+  response.docs = response.docs.filter( doc => doc.score >= process.env.SOLR_QUERY_ADDRESS_SCORE_TOLERANCE);
 
   return response;
 }
@@ -38,11 +41,11 @@ async function narrowForwardQuery( address, options ) {
   const street = road.split(' ');
   const values = [
     required(eq('address_number', house_number)),
-    required(eq('street', ...street.map(required))),
+    required(eq('street', ...street)),
     boost(eq('address', ...boosters), 2),
   ].join(' ');
 
-  return queryAddresses(toQuery(values), options);
+  return queryAddresses(toQuery(values, options));
 }
 
 async function broadForwardQuery( address, options ) {
@@ -55,7 +58,7 @@ function toQuery( q, options = {} ) {
   return {
     q,    
     fl: options.fields ? `${fields},${options.fields}` : fields,
-    rows: process.env.SOLR_QUERY_ADDRESS_ROWS,
+    rows: options.rows || process.env.SOLR_QUERY_ADDRESS_ROWS,
     sort: process.env.SOLR_QUERY_ADDRESS_SORT,
     debugQuery: process.env.SOLR_QUERY_DEBUG,
   };
