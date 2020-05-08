@@ -12,10 +12,10 @@
     "pm2": "^4.2.3"
   },
   "scripts": {
-    "dev": "./start.sh && yarn api:dev",
-    "api:dev": "cd api && yarn api:dev",
-    "api:start": "pm2 start geocoder/geocoder-api.js --name geocoder-api -i max",
-    "api:reload": "pm2 reload geocoder-api",
-    "api:logs": "pm2 logs --lines 200 geocoder-api"
+    "dev": "./start.sh && yarn geocoder:dev",
+    "geocoder:dev": "cd geocoder && yarn geocoder:dev",
+    "geocoder:start": "pm2 start geocoder/geocoder-api.js --name geocoder-api -i max",
+    "geocoder:reload": "pm2 reload geocoder-api",
+    "geocoder:logs": "pm2 logs --lines 200 geocoder-api"
   }
 }
